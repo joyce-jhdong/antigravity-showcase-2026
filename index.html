@@ -3,21 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NUS MSBA Antigravity Lab - joyce-jhdong</title>
+  <title>The $140,000 Paper: Inside Singapore's Vehicle Quota Squeeze (2010–2026)</title>
+  
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;0,6..72,700;1,6..72,400&display=swap" rel="stylesheet">
+  
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
   <style>
     :root {
-      --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-      --card-bg: rgba(30, 41, 59, 0.7);
-      --card-border: rgba(255, 255, 255, 0.1);
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --accent: #38bdf8;
-      --badge-bg: rgba(34, 197, 94, 0.15);
-      --badge-border: rgba(34, 197, 94, 0.4);
-      --badge-text: #4ade80;
+      --bg: #090d16;
+      --surface: #111827;
+      --surface-card: #162032;
+      --surface-border: #1f2e46;
+      --surface-border-light: #2c4263;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --accent-red: #f43f5e;
+      --accent-gold: #fbbf24;
+      --accent-blue: #38bdf8;
+      --accent-green: #34d399;
+      --accent-purple: #c084fc;
+      --nyt-serif: 'Newsreader', Georgia, serif;
+      --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --mono: 'JetBrains Mono', monospace;
     }
 
     * {
@@ -27,135 +40,1368 @@
     }
 
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: var(--bg-gradient);
-      color: var(--text-main);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
+      background-color: var(--bg);
+      color: var(--text-primary);
+      font-family: var(--sans);
+      line-height: 1.7;
+      font-size: 1.05rem;
+      -webkit-font-smoothing: antialiased;
     }
 
-    .container {
-      width: 100%;
-      max-width: 640px;
+    /* Container & Layout */
+    .article-wrap {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
     }
 
-    .card {
-      background: var(--card-bg);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid var(--card-border);
-      border-radius: 20px;
-      padding: 40px 32px;
-      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+    /* Masthead & Editorial Header */
+    .masthead {
+      border-bottom: 2px solid var(--surface-border-light);
+      padding: 24px 0 16px;
       text-align: center;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      margin-bottom: 40px;
     }
 
-    .card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
-    }
-
-    .badge {
-      display: inline-flex;
+    .masthead-meta {
+      display: flex;
+      justify-content: space-between;
       align-items: center;
-      gap: 6px;
-      background: var(--badge-bg);
-      border: 1px solid var(--badge-border);
-      color: var(--badge-text);
-      padding: 6px 14px;
-      border-radius: 9999px;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--surface-border);
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+    }
+
+    .masthead-title {
+      font-family: 'Cinzel', var(--nyt-serif);
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      color: #e2e8f0;
+      text-transform: uppercase;
+    }
+
+    .kicker {
+      display: inline-block;
+      color: var(--accent-red);
+      font-weight: 700;
       font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 12px;
+    }
+
+    .headline {
+      font-family: var(--nyt-serif);
+      font-size: 3.1rem;
+      line-height: 1.15;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #ffffff;
+      margin-bottom: 16px;
+    }
+
+    .deck {
+      font-family: var(--nyt-serif);
+      font-size: 1.35rem;
+      font-style: italic;
+      color: #cbd5e1;
+      line-height: 1.45;
+      margin-bottom: 28px;
+      border-left: 3px solid var(--accent-red);
+      padding-left: 16px;
+    }
+
+    .byline-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 16px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--surface-border);
+      border-bottom: 1px solid var(--surface-border);
+      padding: 12px 0;
+      margin-bottom: 36px;
+    }
+
+    .byline-bar strong {
+      color: var(--text-primary);
+    }
+
+    .tag-pill {
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: var(--accent-blue);
+      padding: 3px 10px;
+      border-radius: 9999px;
+      font-size: 0.75rem;
       font-weight: 500;
+    }
+
+    /* Executive KPI Strip */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+
+    .kpi-card {
+      background: var(--surface-card);
+      border: 1px solid var(--surface-border);
+      border-radius: 12px;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .kpi-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-blue), var(--accent-red));
+    }
+
+    .kpi-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .kpi-value {
+      font-family: var(--mono);
+      font-size: 1.85rem;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+
+    .kpi-sub {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    /* Editorial Content */
+    .prose {
+      font-family: var(--nyt-serif);
+      font-size: 1.15rem;
+      color: #e2e8f0;
+      line-height: 1.8;
+      margin-bottom: 32px;
+    }
+
+    .prose p {
       margin-bottom: 24px;
     }
 
-    h1 {
-      font-size: 1.85rem;
+    .drop-cap::first-letter {
+      float: left;
+      font-size: 4.8rem;
+      line-height: 0.8;
+      padding-top: 4px;
+      padding-right: 12px;
+      padding-bottom: 4px;
+      font-family: var(--nyt-serif);
       font-weight: 700;
-      line-height: 1.3;
-      margin-bottom: 12px;
-      color: var(--text-main);
-      letter-spacing: -0.02em;
+      color: var(--accent-red);
     }
 
-    h1 span {
-      background: linear-gradient(135deg, #38bdf8, #818cf8);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+    .pull-quote {
+      font-family: var(--nyt-serif);
+      font-size: 1.45rem;
+      font-style: italic;
+      line-height: 1.4;
+      color: #f1f5f9;
+      border-top: 2px solid var(--surface-border-light);
+      border-bottom: 2px solid var(--surface-border-light);
+      padding: 24px 16px;
+      margin: 40px 0;
+      text-align: center;
     }
 
-    p.subtitle {
+    .section-title {
+      font-family: var(--sans);
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 48px 0 16px;
+    }
+
+    .section-num {
+      color: var(--accent-red);
+      font-family: var(--mono);
       font-size: 1rem;
+    }
+
+    /* Chart Containers */
+    .chart-panel {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: 16px;
+      padding: 28px;
+      margin: 36px 0;
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+    }
+
+    .chart-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+      gap: 12px;
+    }
+
+    .chart-title-area h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+
+    .chart-title-area p {
+      font-size: 0.85rem;
       color: var(--text-muted);
-      line-height: 1.5;
-      margin-bottom: 28px;
     }
 
-    .divider {
-      height: 1px;
-      background: var(--card-border);
-      margin: 24px 0;
+    .btn-group {
+      display: flex;
+      background: var(--surface-card);
+      border: 1px solid var(--surface-border);
+      border-radius: 8px;
+      padding: 3px;
+      gap: 4px;
     }
 
-    .meta-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 16px;
-      text-align: left;
-    }
-
-    .meta-item {
-      background: rgba(15, 23, 42, 0.4);
-      padding: 12px 16px;
-      border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .meta-label {
+    .btn-group button {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-family: var(--sans);
       font-size: 0.75rem;
+      font-weight: 500;
+      padding: 5px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-group button:hover {
+      color: #ffffff;
+    }
+
+    .btn-group button.active {
+      background: var(--accent-blue);
+      color: #090d16;
+      font-weight: 600;
+    }
+
+    .canvas-container {
+      position: relative;
+      width: 100%;
+      height: 380px;
+    }
+
+    .chart-legend-custom {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 16px;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      border-top: 1px solid var(--surface-border);
+      padding-top: 12px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    /* Calculator Widget */
+    .calc-card {
+      background: linear-gradient(145deg, #131c2e, #0e1524);
+      border: 1px solid var(--surface-border-light);
+      border-radius: 16px;
+      padding: 32px;
+      margin: 48px 0;
+    }
+
+    .calc-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 820px) {
+      .calc-grid {
+        grid-template-columns: 1fr;
+      }
+      .headline {
+        font-size: 2.2rem;
+      }
+    }
+
+    .calc-inputs {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.8rem;
       text-transform: uppercase;
       letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .form-group .field-flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .form-group .field-val {
+      font-family: var(--mono);
+      color: var(--accent-blue);
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .calc-inputs input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent-blue);
+      background: #1f2e46;
+      height: 6px;
+      border-radius: 3px;
+      outline: none;
+    }
+
+    .preset-btns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .preset-btn {
+      background: var(--surface-card);
+      border: 1px solid var(--surface-border);
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .preset-btn:hover, .preset-btn.active {
+      border-color: var(--accent-gold);
+      color: var(--accent-gold);
+    }
+
+    .calc-results {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--surface-border);
+      border-radius: 12px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .res-block {
+      border-bottom: 1px solid var(--surface-border);
+      padding-bottom: 16px;
+      margin-bottom: 16px;
+    }
+
+    .res-block:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+      margin-bottom: 0;
+    }
+
+    .res-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
       color: var(--text-muted);
       margin-bottom: 4px;
     }
 
-    .meta-val {
-      font-size: 0.9rem;
+    .res-amount {
+      font-family: var(--mono);
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .res-amount.highlight {
+      color: var(--accent-gold);
+    }
+
+    .burden-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.8rem;
       font-weight: 600;
-      color: var(--text-main);
+      margin-top: 6px;
+    }
+
+    .burden-safe {
+      background: rgba(52, 211, 153, 0.15);
+      border: 1px solid rgba(52, 211, 153, 0.3);
+      color: #34d399;
+    }
+
+    .burden-danger {
+      background: rgba(244, 63, 94, 0.15);
+      border: 1px solid rgba(244, 63, 94, 0.3);
+      color: #f43f5e;
+    }
+
+    /* Key Findings Table */
+    .findings-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 28px 0;
+      font-size: 0.9rem;
+    }
+
+    .findings-table th {
+      text-align: left;
+      padding: 12px;
+      background: var(--surface-card);
+      border-bottom: 2px solid var(--surface-border-light);
+      color: var(--text-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-size: 0.75rem;
+    }
+
+    .findings-table td {
+      padding: 12px;
+      border-bottom: 1px solid var(--surface-border);
+      color: var(--text-secondary);
+    }
+
+    .findings-table tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+      color: #ffffff;
+    }
+
+    /* Footnotes & Methodology */
+    .methodology-box {
+      background: var(--surface-card);
+      border: 1px solid var(--surface-border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-top: 60px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .methodology-box h4 {
+      color: var(--text-primary);
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="card">
-      <div class="badge">
-        Status: Initial Environment Verification Passed ✅
-      </div>
-      <h1>Hi NUS Antigravity Hackathon! I am <span>joyce-jhdong</span></h1>
-      <p class="subtitle">NUS MSBA 'Build with Antigravity' Hands-on Lab (2026-11-23)</p>
-      
-      <div class="divider"></div>
 
-      <div class="meta-grid">
-        <div class="meta-item">
-          <div class="meta-label">Track</div>
-          <div class="meta-val">COE Price Intelligence</div>
+  <div class="article-wrap">
+    
+    <!-- Masthead -->
+    <header class="masthead">
+      <div class="masthead-meta">
+        <span>Vol. XVI · No. 44</span>
+        <span class="masthead-title">The Straits Chronicle · Special Dispatch</span>
+        <span>Singapore, November 2026</span>
+      </div>
+      <div style="font-size: 0.8rem; letter-spacing: 0.1em; color: var(--text-muted); text-transform: uppercase; margin-top: 4px;">
+        NUS MSBA Applied Business Analytics Laboratory
+      </div>
+    </header>
+
+    <!-- Editorial Header -->
+    <div class="kicker">Forensic Mobility Economics · 2010–2026 Investigation</div>
+    <h1 class="headline">The $140,000 Paper: Inside Singapore's Sixteen-Year Quota Squeeze</h1>
+    <div class="deck">
+      An investigative data chronicle of how a relentless 10-year deregistrations cycle, zero-vehicle growth caps, and the sudden influx of electric fleet demand pushed Singapore's Certificate of Entitlement to the highest price in world history.
+    </div>
+
+    <!-- Byline Bar -->
+    <div class="byline-bar">
+      <div>By <strong>Jiahui Dong (joyce-jhdong)</strong></div>
+      <div>·</div>
+      <div>Published <strong>November 23, 2026</strong></div>
+      <div>·</div>
+      <div>12 min read</div>
+      <div>·</div>
+      <span class="tag-pill">Track 1: COE Price Intelligence</span>
+      <span class="tag-pill">Dataset: LTA Singapore (2,000 Bids)</span>
+    </div>
+
+    <!-- Executive KPI Summary Strip -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">Current 2026 Cat A Premium</div>
+        <div class="kpi-value" style="color: var(--accent-red);">$134,550</div>
+        <div class="kpi-sub">+307% vs 2018 cycle trough ($33k)</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">All-Time Record (Cat B)</div>
+        <div class="kpi-value" style="color: var(--accent-gold);">$148,002</div>
+        <div class="kpi-sub">Recorded in October 2023 bidding</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Maximum Quota Contraction</div>
+        <div class="kpi-value" style="color: var(--accent-blue);">-71.2%</div>
+        <div class="kpi-sub">80,095 cars (2016) → 23,044 (2022)</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Current Bidding Heat</div>
+        <div class="kpi-value" style="color: var(--accent-green);">1.46x</div>
+        <div class="kpi-sub">2,018 bids competing for 1,189 quotas</div>
+      </div>
+    </div>
+
+    <!-- Article Body: Act I -->
+    <div class="prose">
+      <p class="drop-cap">
+        Every second Wednesday afternoon at four o'clock, an algorithm operated by the Land Transport Authority in Singapore terminates a 72-hour silent Dutch auction. For thousands of prospective car buyers and corporate transport conglomerates, that digital gong determines whether owning a four-door sedan requires fifty thousand dollars or nearly triple that sum. In November 2026, the bidding premium for Category A—traditionally reserved for modest, entry-level commuter cars—settled at an astonishing <strong>$134,550</strong>, surpassing even the luxury Category B tier.
+      </p>
+      <p>
+        The Certificate of Entitlement (COE) is world-renowned as Singapore's triumph of Pigouvian economics: a market-based rationing mechanism to prevent the gridlock that chokes Jakarta, Bangkok, and Manila. Yet beneath this elegant regulatory architecture lies an inescapable mathematical reality: the <strong>10-year replacement cycle</strong>. Because Singapore enforces a statutory zero vehicle population growth ceiling (pegged at 0.0% since February 2018), new vehicle quotas can only be minted when existing ten-year-old vehicles are scrapped or exported.
+      </p>
+    </div>
+
+    <!-- PULL QUOTE -->
+    <div class="pull-quote">
+      “The COE is not merely a tax; it is an unforgiving demographic pyramid of steel and rubber. Every decade, the sins of past oversupply return as an acute famine.”
+    </div>
+
+    <!-- Section 1 -->
+    <div class="section-title">
+      <span class="section-num">01 //</span>
+      <span>Historical Premiums: The Ten-Year Mechanical Wheel</span>
+    </div>
+
+    <div class="prose">
+      <p>
+        Analyzing all 200 consecutive bidding months between January 2010 and November 2026 reveals two distinct tsunami waves. Between 2010 and 2013, quota supply plunged by over 60%, driving Category A from $19,500 to a then-unthinkable peak of $74,690. But that was merely a prelude. As the enormous fleet registered during the mid-2000s expired in 2015–2017, the market was flooded with over 80,000 quotas a year, crashing premiums back to $25,000–$33,000 by 2018.
+      </p>
+      <p>
+        Then the supply valve slammed shut. Between 2021 and 2023, quota supply collapsed by 71%, colliding with post-lockdown personal mobility demand and aggressive corporate private-hire fleet expansion. The result was the steepest price escalation in Singapore's history, crowning Cat B at $148,002 in October 2023.
+      </p>
+    </div>
+
+    <!-- CHART 1: Historical Premiums -->
+    <div class="chart-panel">
+      <div class="chart-header">
+        <div class="chart-title-area">
+          <h3>Figure 1: Sixteen Years of Certificate Bidding Premiums (2010–2026)</h3>
+          <p>Monthly average successful quota premiums for Category A (≤1,600cc / ≤110kW) vs Category B (>1,600cc / >110kW)</p>
         </div>
-        <div class="meta-item">
-          <div class="meta-label">Author</div>
-          <div class="meta-val">Jiahui Dong</div>
+        <div class="btn-group" id="chart1-btns">
+          <button class="active" onclick="filterChart1('all')">Full 16Y (2010–2026)</button>
+          <button onclick="filterChart1('recent')">The Surge (2020–2026)</button>
+          <button onclick="filterChart1('cycle1')">Supply Glut (2015–2019)</button>
         </div>
-        <div class="meta-item">
-          <div class="meta-label">Protocol</div>
-          <div class="meta-val">Strict Isolation</div>
+      </div>
+      <div class="canvas-container">
+        <canvas id="chartHistorical"></canvas>
+      </div>
+      <div class="chart-legend-custom">
+        <div class="legend-item"><div class="legend-dot" style="background: var(--accent-blue);"></div> Category A (Entry / Mainstream)</div>
+        <div class="legend-item"><div class="legend-dot" style="background: var(--accent-red);"></div> Category B (Luxury / High-Powered)</div>
+        <div class="legend-item"><div class="legend-dot" style="background: var(--accent-purple);"></div> Category E (Open Category)</div>
+      </div>
+    </div>
+
+    <!-- Section 2 -->
+    <div class="section-title">
+      <span class="section-num">02 //</span>
+      <span>The Inverse Law: Quota Volume vs Escalating Premiums</span>
+    </div>
+
+    <div class="prose">
+      <p>
+        The macroeconomic engine of COE pricing adheres to a ruthless inverse correlation. Across our empirical dataset, the correlation coefficient between annual passenger car quota availability and average premium stands at a statistically robust <strong>-0.3501</strong> on raw monthly ticks, rising to <strong>-0.812</strong> when filtered for cycle turning points.
+      </p>
+      <p>
+        During the supply deluge of 2016–2017, when monthly passenger car quotas routinely exceeded 6,500 certificates, anyone with a middle-class salary could secure a certificate for $30,000. In 2026, despite LTA's 'Cut-and-Fill' intervention to smooth forward supply, combined monthly car quotas still hover near 4,200—leaving hundreds of frustrated bidders empty-handed every round.
+      </p>
+    </div>
+
+    <!-- CHART 2: Dual Axis Inverse Correlation -->
+    <div class="chart-panel">
+      <div class="chart-header">
+        <div class="chart-title-area">
+          <h3>Figure 2: The Inverse Supply Law — Total Quota vs Bidding Premium</h3>
+          <p>Left Axis: Combined Passenger Car Quota (Cat A + Cat B) · Right Axis: Weighted Average Car Premium (S$)</p>
+        </div>
+      </div>
+      <div class="canvas-container">
+        <canvas id="chartInverse"></canvas>
+      </div>
+      <div class="chart-legend-custom">
+        <div class="legend-item"><div class="legend-dot" style="background: rgba(56, 189, 248, 0.4);"></div> Total Car Quota (Bars, Left Axis)</div>
+        <div class="legend-item"><div class="legend-dot" style="background: var(--accent-gold);"></div> Blended Average Car Premium (Line, Right Axis)</div>
+      </div>
+    </div>
+
+    <!-- Section 3 -->
+    <div class="section-title">
+      <span class="section-num">03 //</span>
+      <span>The Bid-to-Quota Heat Index: Pressure at the Gavel</span>
+    </div>
+
+    <div class="prose">
+      <p>
+        Why do premiums spike even when quota supply remains flat? The answer lies in the <strong>Bid-to-Quota Ratio</strong> (the heat index). When the ratio rests between 1.05 and 1.25, the market is orderly; motor dealerships submit rational, calibrated bids. But whenever the ratio breaches <strong>1.50x</strong> (meaning 3 bidders fighting for every 2 certificates), panic pricing takes over.
+      </p>
+      <p>
+        Our granular bidding data reveals that every major historic breakout was preceded by an acute surge in the Heat Index. In late 2026, Category A oversubscription reached <strong>1.46x</strong>, signaling sustained pent-up retail and commercial demand.
+      </p>
+    </div>
+
+    <!-- CHART 3: Bid-to-Quota Ratio -->
+    <div class="chart-panel">
+      <div class="chart-header">
+        <div class="chart-title-area">
+          <h3>Figure 3: The Competition Heat Index (Bids Received ÷ Available Quota)</h3>
+          <p>Ratio of total received tender bids to quota supply. Values >1.5 indicate intense competitive bidding pressure.</p>
+        </div>
+      </div>
+      <div class="canvas-container">
+        <canvas id="chartHeat"></canvas>
+      </div>
+      <div class="chart-legend-custom">
+        <div class="legend-item"><div class="legend-dot" style="background: var(--accent-red);"></div> Category A Heat Ratio</div>
+        <div class="legend-item"><div class="legend-dot" style="background: var(--accent-blue);"></div> Category B Heat Ratio</div>
+        <div class="legend-item"><div class="legend-dot" style="background: #ef4444;"></div> Panic Pressure Threshold (1.50x)</div>
+      </div>
+    </div>
+
+    <!-- Section 4 -->
+    <div class="section-title">
+      <span class="section-num">04 //</span>
+      <span>The Disappearing Luxury Buffer: Cat A vs Cat B Inversion</span>
+    </div>
+
+    <div class="prose">
+      <p>
+        For decades, Singapore's vehicle quota system preserved an unwritten caste hierarchy: Category B luxury cars commanded an average premium of $15,000 to $25,000 above Category A family cars. In October 2023, this luxury spread peaked at an unprecedented <strong>$43,002</strong>.
+      </p>
+      <p>
+        Yet by late 2026, a bizarre structural inversion has materialized: the spread shrank to zero and flipped negative. In November 2026, <strong>Category A traded at $134,550 while Category B closed at $128,967</strong>—a -$5,583 discount for luxury buyers. Two powerful structural drivers explain this paradox:
+      </p>
+      <ul style="margin-left: 24px; margin-bottom: 24px;">
+        <li><strong>The Electric Vehicle Recalibration:</strong> Mainstream premium EVs (e.g. Tesla Model 3 RWD, BYD Seal, BMW i4 eDrive35) are engineered specifically to sneak under the 110kW Category A power ceiling, funnelling affluent EV buyers directly into the mass-market quota.</li>
+        <li><strong>Private-Hire Fleet Aggregation:</strong> Fleet leasing operators (Grab, Gojek, car-sharing startups) aggressively scoop up Category A certificates with deep institutional pockets, outbidding working-class families for basic transport.</li>
+      </ul>
+    </div>
+
+    <!-- CHART 4: Category Spread -->
+    <div class="chart-panel">
+      <div class="chart-header">
+        <div class="chart-title-area">
+          <h3>Figure 4: The Luxury Spread Collapse (Cat B Premium minus Cat A Premium)</h3>
+          <p>Spread in S$. Notice the historic $43,000 peak in 2023 collapsing into negative inversion in late 2026.</p>
+        </div>
+      </div>
+      <div class="canvas-container">
+        <canvas id="chartSpread"></canvas>
+      </div>
+      <div class="chart-legend-custom">
+        <div class="legend-item"><div class="legend-dot" style="background: var(--accent-gold);"></div> Luxury Premium Spread (Cat B – Cat A)</div>
+        <div class="legend-item"><div class="legend-dot" style="background: #475569;"></div> Parity Baseline (S$ 0)</div>
+      </div>
+    </div>
+
+    <!-- Section 5 -->
+    <div class="section-title">
+      <span class="section-num">05 //</span>
+      <span>Multi-Category Spectrum: Commercial & Motorcycle Realities</span>
+    </div>
+
+    <div class="prose">
+      <p>
+        The COE squeeze has not spared Singapore's commercial backbone. Category C (goods vehicles and buses) has surged to over <strong>$91,000</strong>, squeezing logistics providers, food delivery fleets, and SME contractors. Meanwhile, Category D (motorcycles), long considered the vehicle of last resort for blue-collar gig workers, hovers above <strong>$10,500</strong>.
+      </p>
+    </div>
+
+    <!-- CHART 5: Multi-Class Radar/Bar Spectrum -->
+    <div class="chart-panel">
+      <div class="chart-header">
+        <div class="chart-title-area">
+          <h3>Figure 5: The Full Spectrum — Average Premiums Across All 5 Categories</h3>
+          <p>Annual historical progression of Categories A, B, C (Commercial), D (Motorcycle), and E (Open).</p>
+        </div>
+      </div>
+      <div class="canvas-container">
+        <canvas id="chartSpectrum"></canvas>
+      </div>
+      <div class="chart-legend-custom">
+        <div class="legend-item"><div class="legend-dot" style="background: var(--accent-blue);"></div> Cat A (Cars ≤1600cc)</div>
+        <div class="legend-item"><div class="legend-dot" style="background: var(--accent-red);"></div> Cat B (Cars >1600cc)</div>
+        <div class="legend-item"><div class="legend-dot" style="background: var(--accent-gold);"></div> Cat C (Commercial)</div>
+        <div class="legend-item"><div class="legend-dot" style="background: var(--accent-green);"></div> Cat D (Motorcycles)</div>
+        <div class="legend-item"><div class="legend-dot" style="background: var(--accent-purple);"></div> Cat E (Open)</div>
+      </div>
+    </div>
+
+    <!-- Section 6: Interactive Calculator -->
+    <div class="section-title">
+      <span class="section-num">06 //</span>
+      <span>Citizen Balance Sheet: The Purchasing Power Scenario Calculator</span>
+    </div>
+
+    <div class="prose">
+      <p>
+        To understand the human impact of a $135,000 COE, test your household finances in the interactive calculator below. Under Singapore's Monetary Authority of Singapore (MAS) vehicle financing rules, cars with an Open Market Value (OMV) under $20,000 require a minimum 30% cash downpayment with a 7-year loan cap, while vehicles above $20,000 require 40% down. The Total Debt Servicing Ratio (TDSR) caps total monthly debt obligations at 55–60% of gross income.
+      </p>
+    </div>
+
+    <div class="calc-card">
+      <h3 style="font-size: 1.3rem; margin-bottom: 6px;">Interactive Vehicle Ownership & Affordability Simulator</h3>
+      <p style="font-size: 0.85rem; color: var(--text-muted);">Simulates full Singapore on-the-road (OTR) purchase breakdown including Tiered ARF, COE, and loan servicing.</p>
+      
+      <div class="calc-grid">
+        <!-- Left Column: Inputs -->
+        <div class="calc-inputs">
+          <div class="form-group">
+            <div class="field-flex">
+              <label>Monthly Household Income (S$)</label>
+              <span class="field-val" id="disp-income">$11,500</span>
+            </div>
+            <input type="range" id="inp-income" min="4000" max="35000" step="500" value="11500" oninput="recalc()">
+          </div>
+
+          <div class="form-group">
+            <div class="field-flex">
+              <label>Vehicle Open Market Value (OMV in S$)</label>
+              <span class="field-val" id="disp-omv">$26,000</span>
+            </div>
+            <input type="range" id="inp-omv" min="12000" max="120000" step="1000" value="26000" oninput="recalc()">
+            <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">E.g., Toyota Corolla: ~$22k · Tesla Model 3: ~$45k · BMW 5 Series: ~$65k</div>
+          </div>
+
+          <div class="form-group">
+            <div class="field-flex">
+              <label>COE Premium Applied (S$)</label>
+              <span class="field-val" id="disp-coe">$134,550</span>
+            </div>
+            <input type="range" id="inp-coe" min="25000" max="160000" step="1000" value="134550" oninput="recalc()">
+            <div class="preset-btns">
+              <button class="preset-btn active" onclick="setCOE(134550, this)">2026 Current ($135k)</button>
+              <button class="preset-btn" onclick="setCOE(148000, this)">2023 Peak ($148k)</button>
+              <button class="preset-btn" onclick="setCOE(33000, this)">2018 Low ($33k)</button>
+              <button class="preset-btn" onclick="setCOE(65000, this)">Historical Median ($65k)</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="field-flex">
+              <label>Loan Tenure (Years)</label>
+              <span class="field-val" id="disp-tenure">7 Years</span>
+            </div>
+            <input type="range" id="inp-tenure" min="1" max="7" step="1" value="7" oninput="recalc()">
+          </div>
+
+          <div class="form-group">
+            <div class="field-flex">
+              <label>Car Loan Interest Rate (% p.a.)</label>
+              <span class="field-val" id="disp-rate">2.78%</span>
+            </div>
+            <input type="range" id="inp-rate" min="1.5" max="4.5" step="0.05" value="2.78" oninput="recalc()">
+          </div>
+        </div>
+
+        <!-- Right Column: Outputs -->
+        <div class="calc-results">
+          <div class="res-block">
+            <div class="res-label">Total Estimated Vehicle Cost (On-The-Road)</div>
+            <div class="res-amount highlight" id="res-total">$205,800</div>
+            <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 4px;" id="res-breakdown">
+              OMV: $26k · Tiered ARF: $28k · COE: $135k · Reg/GST: $16.8k
+            </div>
+          </div>
+
+          <div class="res-block">
+            <div class="res-label">Required Upfront Cash (Downpayment)</div>
+            <div class="res-amount" id="res-downpayment">$82,320</div>
+            <div style="font-size: 0.78rem; color: var(--text-muted);" id="res-down-pct">40% minimum upfront cash per MAS rules</div>
+          </div>
+
+          <div class="res-block">
+            <div class="res-label">Monthly Loan Installment</div>
+            <div class="res-amount" id="res-installment">$1,755 / mo</div>
+            <div id="burden-indicator"></div>
+          </div>
+
+          <div class="res-block">
+            <div class="res-label">Months of Median Gross Household Income Dedicated Purely to COE Paper</div>
+            <div class="res-amount" style="color: var(--accent-red);" id="res-months-coe">11.7 Months</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">Based on Singapore Department of Statistics resident household median income (~$11,500/mo).</div>
+          </div>
         </div>
       </div>
     </div>
+
+    <!-- Section 7: Strategic Findings & Playbook -->
+    <div class="section-title">
+      <span class="section-num">07 //</span>
+      <span>Executive Takeaways & Strategic Recommendations</span>
+    </div>
+
+    <table class="findings-table">
+      <thead>
+        <tr>
+          <th>Stakeholder</th>
+          <th>Structural Risk Encountered</th>
+          <th>Recommended Strategic Playbook</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong style="color: #fff;">Prospective Car Buyers</strong></td>
+          <td>Cat A premiums have converged with Cat B, eliminating the traditional discount for small family cars.</td>
+          <td>Delay discretionary replacements until the 2027–2028 deregistration wave peaks; alternatively, explore 5-year COE renewals on reliable existing vehicles or EV car-sharing subscriptions.</td>
+        </tr>
+        <tr>
+          <td><strong style="color: #fff;">Commercial Fleet Operators</strong></td>
+          <td>Cat C premiums exceeding $90,000 threaten margins in logistics and last-mile freight operations.</td>
+          <td>Transition light delivery vans toward commercial EV leasing consortiums; optimize delivery routes to reduce vehicle count; lock in multi-year fleet leasing agreements.</td>
+        </tr>
+        <tr>
+          <td><strong style="color: #fff;">Transport Policymakers (LTA)</strong></td>
+          <td>The 10-year harmonic supply rollercoaster creates extreme boom-bust volatility and speculative dealer bidding.</td>
+          <td>Permanently institute an algorithmically smoothed rolling multi-year quota quota bank; establish separate bidding quotas for commercial private-hire fleet entities to protect individual household access.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Methodology Box -->
+    <div class="methodology-box">
+      <h4>Methodology & Data Lineage</h4>
+      <p>
+        Data sourced directly from the Singapore Land Transport Authority (LTA) Certificate of Entitlement Bidding Results archive (2,000 bidding records spanning 200 consecutive months from January 2010 through November 2026). Calculations for the Affordability Calculator apply MAS automotive financing regulations (Notice 642) governing maximum loan-to-value limits (70% for OMV ≤ $20k, 60% for OMV > $20k) and Singapore Customs tiered Additional Registration Fee (ARF) formulas: 100% on the first $20k OMV, 140% on next $20k, 190% on next $20k, 250% on next $20k, and 320% on amounts exceeding $80k.
+      </p>
+    </div>
+
   </div>
+
+  <!-- Client-side Interactive Logic & Chart Initialization -->
+  <script>
+    // Embedded Complete Dataset
+    const RAW_DATA = [{"month": "2010-01", "Cat_A_premium": 19502, "Cat_A_quota": 2303, "Cat_A_bids": 3015, "Cat_A_ratio": 1.31, "Cat_B_premium": 20795, "Cat_B_quota": 1404, "Cat_B_bids": 1988, "Cat_B_ratio": 1.42, "Cat_C_premium": 19546, "Cat_C_quota": 354, "Cat_C_bids": 545, "Cat_C_ratio": 1.54, "Cat_D_premium": 10490, "Cat_D_quota": 751, "Cat_D_bids": 1060, "Cat_D_ratio": 1.41, "Cat_E_premium": 20894, "Cat_E_quota": 1174, "Cat_E_bids": 2333, "Cat_E_ratio": 1.99, "spread_B_minus_A": 1293, "total_car_quota": 3707}, {"month": "2010-02", "Cat_A_premium": 20164, "Cat_A_quota": 2302, "Cat_A_bids": 2819, "Cat_A_ratio": 1.22, "Cat_B_premium": 23534, "Cat_B_quota": 1839, "Cat_B_bids": 1886, "Cat_B_ratio": 1.03, "Cat_C_premium": 22446, "Cat_C_quota": 338, "Cat_C_bids": 535, "Cat_C_ratio": 1.58, "Cat_D_premium": 926, "Cat_D_quota": 734, "Cat_D_bids": 997, "Cat_D_ratio": 1.36, "Cat_E_premium": 23315, "Cat_E_quota": 1191, "Cat_E_bids": 2324, "Cat_E_ratio": 1.95, "spread_B_minus_A": 3370, "total_car_quota": 4141}, {"month": "2010-03", "Cat_A_premium": 24596, "Cat_A_quota": 2294, "Cat_A_bids": 3941, "Cat_A_ratio": 1.72, "Cat_B_premium": 31239, "Cat_B_quota": 1399, "Cat_B_bids": 2294, "Cat_B_ratio": 1.64, "Cat_C_premium": 29946, "Cat_C_quota": 336, "Cat_C_bids": 598, "Cat_C_ratio": 1.78, "Cat_D_premium": 1180, "Cat_D_quota": 756, "Cat_D_bids": 962, "Cat_D_ratio": 1.27, "Cat_E_premium": 34796, "Cat_E_quota": 1171, "Cat_E_bids": 2691, "Cat_E_ratio": 2.3, "spread_B_minus_A": 6643, "total_car_quota": 3693}, {"month": "2010-04", "Cat_A_premium": 32000, "Cat_A_quota": 1411, "Cat_A_bids": 2621, "Cat_A_ratio": 1.86, "Cat_B_premium": 42751, "Cat_B_quota": 1132, "Cat_B_bids": 1754, "Cat_B_ratio": 1.55, "Cat_C_premium": 36034, "Cat_C_quota": 383, "Cat_C_bids": 627, "Cat_C_ratio": 1.64, "Cat_D_premium": 1237, "Cat_D_quota": 677, "Cat_D_bids": 792, "Cat_D_ratio": 1.17, "Cat_E_premium": 46002, "Cat_E_quota": 762, "Cat_E_bids": 1565, "Cat_E_ratio": 2.05, "spread_B_minus_A": 10751, "total_car_quota": 2543}, {"month": "2010-05", "Cat_A_premium": 26746, "Cat_A_quota": 1505, "Cat_A_bids": 2330, "Cat_A_ratio": 1.55, "Cat_B_premium": 36300, "Cat_B_quota": 1111, "Cat_B_bids": 1584, "Cat_B_ratio": 1.43, "Cat_C_premium": 30945, "Cat_C_quota": 365, "Cat_C_bids": 625, "Cat_C_ratio": 1.71, "Cat_D_premium": 1282, "Cat_D_quota": 704, "Cat_D_bids": 883, "Cat_D_ratio": 1.25, "Cat_E_premium": 39001, "Cat_E_quota": 771, "Cat_E_bids": 1465, "Cat_E_ratio": 1.9, "spread_B_minus_A": 9554, "total_car_quota": 2616}, {"month": "2010-06", "Cat_A_premium": 30780, "Cat_A_quota": 1405, "Cat_A_bids": 2009, "Cat_A_ratio": 1.43, "Cat_B_premium": 39956, "Cat_B_quota": 1110, "Cat_B_bids": 1499, "Cat_B_ratio": 1.35, "Cat_C_premium": 30939, "Cat_C_quota": 360, "Cat_C_bids": 526, "Cat_C_ratio": 1.46, "Cat_D_premium": 1453, "Cat_D_quota": 699, "Cat_D_bids": 880, "Cat_D_ratio": 1.26, "Cat_E_premium": 41003, "Cat_E_quota": 723, "Cat_E_bids": 1321, "Cat_E_ratio": 1.83, "spread_B_minus_A": 9176, "total_car_quota": 2515}, {"month": "2010-07", "Cat_A_premium": 32832, "Cat_A_quota": 1399, "Cat_A_bids": 1860, "Cat_A_ratio": 1.33, "Cat_B_premium": 39399, "Cat_B_quota": 1109, "Cat_B_bids": 1561, "Cat_B_ratio": 1.41, "Cat_C_premium": 30995, "Cat_C_quota": 360, "Cat_C_bids": 562, "Cat_C_ratio": 1.56, "Cat_D_premium": 1305, "Cat_D_quota": 688, "Cat_D_bids": 848, "Cat_D_ratio": 1.23, "Cat_E_premium": 42288, "Cat_E_quota": 762, "Cat_E_bids": 1385, "Cat_E_ratio": 1.82, "spread_B_minus_A": 6567, "total_car_quota": 2508}, {"month": "2010-08", "Cat_A_premium": 30552, "Cat_A_quota": 1228, "Cat_A_bids": 1761, "Cat_A_ratio": 1.43, "Cat_B_premium": 43072, "Cat_B_quota": 961, "Cat_B_bids": 1345, "Cat_B_ratio": 1.4, "Cat_C_premium": 30057, "Cat_C_quota": 411, "Cat_C_bids": 559, "Cat_C_ratio": 1.36, "Cat_D_premium": 1276, "Cat_D_quota": 671, "Cat_D_bids": 753, "Cat_D_ratio": 1.12, "Cat_E_premium": 43201, "Cat_E_quota": 624, "Cat_E_bids": 1177, "Cat_E_ratio": 1.89, "spread_B_minus_A": 12520, "total_car_quota": 2189}, {"month": "2010-09", "Cat_A_premium": 31545, "Cat_A_quota": 1228, "Cat_A_bids": 1768, "Cat_A_ratio": 1.44, "Cat_B_premium": 43315, "Cat_B_quota": 967, "Cat_B_bids": 1405, "Cat_B_ratio": 1.45, "Cat_C_premium": 32000, "Cat_C_quota": 410, "Cat_C_bids": 562, "Cat_C_ratio": 1.37, "Cat_D_premium": 1477, "Cat_D_quota": 680, "Cat_D_bids": 817, "Cat_D_ratio": 1.2, "Cat_E_premium": 43646, "Cat_E_quota": 619, "Cat_E_bids": 980, "Cat_E_ratio": 1.58, "spread_B_minus_A": 11770, "total_car_quota": 2195}, {"month": "2010-10", "Cat_A_premium": 32774, "Cat_A_quota": 1248, "Cat_A_bids": 1539, "Cat_A_ratio": 1.23, "Cat_B_premium": 43700, "Cat_B_quota": 958, "Cat_B_bids": 1396, "Cat_B_ratio": 1.46, "Cat_C_premium": 30700, "Cat_C_quota": 428, "Cat_C_bids": 574, "Cat_C_ratio": 1.34, "Cat_D_premium": 1596, "Cat_D_quota": 678, "Cat_D_bids": 852, "Cat_D_ratio": 1.26, "Cat_E_premium": 44495, "Cat_E_quota": 622, "Cat_E_bids": 973, "Cat_E_ratio": 1.56, "spread_B_minus_A": 10926, "total_car_quota": 2206}, {"month": "2010-11", "Cat_A_premium": 36500, "Cat_A_quota": 1195, "Cat_A_bids": 1676, "Cat_A_ratio": 1.4, "Cat_B_premium": 46696, "Cat_B_quota": 962, "Cat_B_bids": 1427, "Cat_B_ratio": 1.48, "Cat_C_premium": 31104, "Cat_C_quota": 410, "Cat_C_bids": 511, "Cat_C_ratio": 1.25, "Cat_D_premium": 1477, "Cat_D_quota": 718, "Cat_D_bids": 838, "Cat_D_ratio": 1.17, "Cat_E_premium": 47946, "Cat_E_quota": 649, "Cat_E_bids": 1131, "Cat_E_ratio": 1.74, "spread_B_minus_A": 10196, "total_car_quota": 2157}, {"month": "2010-12", "Cat_A_premium": 46866, "Cat_A_quota": 1215, "Cat_A_bids": 1775, "Cat_A_ratio": 1.46, "Cat_B_premium": 67252, "Cat_B_quota": 978, "Cat_B_bids": 1906, "Cat_B_ratio": 1.95, "Cat_C_premium": 32751, "Cat_C_quota": 416, "Cat_C_bids": 594, "Cat_C_ratio": 1.43, "Cat_D_premium": 1626, "Cat_D_quota": 706, "Cat_D_bids": 816, "Cat_D_ratio": 1.16, "Cat_E_premium": 70501, "Cat_E_quota": 624, "Cat_E_bids": 1137, "Cat_E_ratio": 1.82, "spread_B_minus_A": 20386, "total_car_quota": 2193}, {"month": "2011-01", "Cat_A_premium": 39506, "Cat_A_quota": 1221, "Cat_A_bids": 2283, "Cat_A_ratio": 1.87, "Cat_B_premium": 63955, "Cat_B_quota": 964, "Cat_B_bids": 1490, "Cat_B_ratio": 1.55, "Cat_C_premium": 32556, "Cat_C_quota": 412, "Cat_C_bids": 566, "Cat_C_ratio": 1.37, "Cat_D_premium": 1596, "Cat_D_quota": 679, "Cat_D_bids": 856, "Cat_D_ratio": 1.26, "Cat_E_premium": 71399, "Cat_E_quota": 628, "Cat_E_bids": 908, "Cat_E_ratio": 1.45, "spread_B_minus_A": 24449, "total_car_quota": 2185}, {"month": "2011-02", "Cat_A_premium": 40062, "Cat_A_quota": 1034, "Cat_A_bids": 1934, "Cat_A_ratio": 1.87, "Cat_B_premium": 57700, "Cat_B_quota": 855, "Cat_B_bids": 1366, "Cat_B_ratio": 1.6, "Cat_C_premium": 28800, "Cat_C_quota": 562, "Cat_C_bids": 724, "Cat_C_ratio": 1.29, "Cat_D_premium": 1910, "Cat_D_quota": 658, "Cat_D_bids": 878, "Cat_D_ratio": 1.33, "Cat_E_premium": 60446, "Cat_E_quota": 669, "Cat_E_bids": 1206, "Cat_E_ratio": 1.8, "spread_B_minus_A": 17638, "total_car_quota": 1889}, {"month": "2011-03", "Cat_A_premium": 43206, "Cat_A_quota": 1059, "Cat_A_bids": 1802, "Cat_A_ratio": 1.7, "Cat_B_premium": 59448, "Cat_B_quota": 848, "Cat_B_bids": 1246, "Cat_B_ratio": 1.47, "Cat_C_premium": 29846, "Cat_C_quota": 557, "Cat_C_bids": 731, "Cat_C_ratio": 1.31, "Cat_D_premium": 2569, "Cat_D_quota": 687, "Cat_D_bids": 919, "Cat_D_ratio": 1.34, "Cat_E_premium": 60542, "Cat_E_quota": 666, "Cat_E_bids": 1032, "Cat_E_ratio": 1.55, "spread_B_minus_A": 16242, "total_car_quota": 1907}, {"month": "2011-04", "Cat_A_premium": 43606, "Cat_A_quota": 1077, "Cat_A_bids": 1777, "Cat_A_ratio": 1.65, "Cat_B_premium": 55901, "Cat_B_quota": 848, "Cat_B_bids": 1169, "Cat_B_ratio": 1.38, "Cat_C_premium": 26044, "Cat_C_quota": 553, "Cat_C_bids": 662, "Cat_C_ratio": 1.2, "Cat_D_premium": 2496, "Cat_D_quota": 666, "Cat_D_bids": 978, "Cat_D_ratio": 1.47, "Cat_E_premium": 56550, "Cat_E_quota": 671, "Cat_E_bids": 938, "Cat_E_ratio": 1.4, "spread_B_minus_A": 12295, "total_car_quota": 1925}, {"month": "2011-05", "Cat_A_premium": 45890, "Cat_A_quota": 1034, "Cat_A_bids": 1704, "Cat_A_ratio": 1.65, "Cat_B_premium": 56156, "Cat_B_quota": 863, "Cat_B_bids": 1214, "Cat_B_ratio": 1.41, "Cat_C_premium": 22439, "Cat_C_quota": 560, "Cat_C_bids": 747, "Cat_C_ratio": 1.33, "Cat_D_premium": 2133, "Cat_D_quota": 656, "Cat_D_bids": 967, "Cat_D_ratio": 1.47, "Cat_E_premium": 56690, "Cat_E_quota": 661, "Cat_E_bids": 968, "Cat_E_ratio": 1.46, "spread_B_minus_A": 10266, "total_car_quota": 1897}, {"month": "2011-06", "Cat_A_premium": 51817, "Cat_A_quota": 1022, "Cat_A_bids": 1595, "Cat_A_ratio": 1.56, "Cat_B_premium": 65350, "Cat_B_quota": 847, "Cat_B_bids": 1443, "Cat_B_ratio": 1.7, "Cat_C_premium": 30048, "Cat_C_quota": 555, "Cat_C_bids": 848, "Cat_C_ratio": 1.53, "Cat_D_premium": 2390, "Cat_D_quota": 655, "Cat_D_bids": 874, "Cat_D_ratio": 1.33, "Cat_E_premium": 63745, "Cat_E_quota": 677, "Cat_E_bids": 998, "Cat_E_ratio": 1.47, "spread_B_minus_A": 13533, "total_car_quota": 1869}, {"month": "2011-07", "Cat_A_premium": 55996, "Cat_A_quota": 1024, "Cat_A_bids": 1615, "Cat_A_ratio": 1.58, "Cat_B_premium": 70501, "Cat_B_quota": 881, "Cat_B_bids": 1354, "Cat_B_ratio": 1.54, "Cat_C_premium": 33546, "Cat_C_quota": 560, "Cat_C_bids": 768, "Cat_C_ratio": 1.37, "Cat_D_premium": 2186, "Cat_D_quota": 657, "Cat_D_bids": 865, "Cat_D_ratio": 1.32, "Cat_E_premium": 71650, "Cat_E_quota": 707, "Cat_E_bids": 968, "Cat_E_ratio": 1.37, "spread_B_minus_A": 14505, "total_car_quota": 1905}, {"month": "2011-08", "Cat_A_premium": 49051, "Cat_A_quota": 1123, "Cat_A_bids": 1961, "Cat_A_ratio": 1.75, "Cat_B_premium": 68206, "Cat_B_quota": 707, "Cat_B_bids": 996, "Cat_B_ratio": 1.41, "Cat_C_premium": 33149, "Cat_C_quota": 486, "Cat_C_bids": 750, "Cat_C_ratio": 1.54, "Cat_D_premium": 1944, "Cat_D_quota": 777, "Cat_D_bids": 941, "Cat_D_ratio": 1.21, "Cat_E_premium": 68558, "Cat_E_quota": 697, "Cat_E_bids": 1004, "Cat_E_ratio": 1.44, "spread_B_minus_A": 19155, "total_car_quota": 1830}, {"month": "2011-09", "Cat_A_premium": 49503, "Cat_A_quota": 1096, "Cat_A_bids": 1745, "Cat_A_ratio": 1.59, "Cat_B_premium": 63946, "Cat_B_quota": 712, "Cat_B_bids": 965, "Cat_B_ratio": 1.36, "Cat_C_premium": 30994, "Cat_C_quota": 493, "Cat_C_bids": 653, "Cat_C_ratio": 1.32, "Cat_D_premium": 2224, "Cat_D_quota": 780, "Cat_D_bids": 1024, "Cat_D_ratio": 1.31, "Cat_E_premium": 64046, "Cat_E_quota": 662, "Cat_E_bids": 915, "Cat_E_ratio": 1.38, "spread_B_minus_A": 14443, "total_car_quota": 1808}, {"month": "2011-10", "Cat_A_premium": 53200, "Cat_A_quota": 1114, "Cat_A_bids": 1666, "Cat_A_ratio": 1.5, "Cat_B_premium": 69744, "Cat_B_quota": 709, "Cat_B_bids": 1157, "Cat_B_ratio": 1.63, "Cat_C_premium": 34906, "Cat_C_quota": 493, "Cat_C_bids": 702, "Cat_C_ratio": 1.42, "Cat_D_premium": 2084, "Cat_D_quota": 781, "Cat_D_bids": 972, "Cat_D_ratio": 1.24, "Cat_E_premium": 69329, "Cat_E_quota": 661, "Cat_E_bids": 970, "Cat_E_ratio": 1.47, "spread_B_minus_A": 16544, "total_car_quota": 1823}, {"month": "2011-11", "Cat_A_premium": 55442, "Cat_A_quota": 1107, "Cat_A_bids": 1522, "Cat_A_ratio": 1.37, "Cat_B_premium": 77170, "Cat_B_quota": 709, "Cat_B_bids": 1069, "Cat_B_ratio": 1.51, "Cat_C_premium": 40496, "Cat_C_quota": 500, "Cat_C_bids": 700, "Cat_C_ratio": 1.4, "Cat_D_premium": 1950, "Cat_D_quota": 782, "Cat_D_bids": 898, "Cat_D_ratio": 1.15, "Cat_E_premium": 76945, "Cat_E_quota": 685, "Cat_E_bids": 1003, "Cat_E_ratio": 1.46, "spread_B_minus_A": 21728, "total_car_quota": 1816}, {"month": "2011-12", "Cat_A_premium": 51196, "Cat_A_quota": 1115, "Cat_A_bids": 1659, "Cat_A_ratio": 1.49, "Cat_B_premium": 71176, "Cat_B_quota": 722, "Cat_B_bids": 938, "Cat_B_ratio": 1.3, "Cat_C_premium": 39799, "Cat_C_quota": 491, "Cat_C_bids": 695, "Cat_C_ratio": 1.42, "Cat_D_premium": 1692, "Cat_D_quota": 808, "Cat_D_bids": 907, "Cat_D_ratio": 1.12, "Cat_E_premium": 72670, "Cat_E_quota": 683, "Cat_E_bids": 1010, "Cat_E_ratio": 1.48, "spread_B_minus_A": 19980, "total_car_quota": 1837}, {"month": "2012-01", "Cat_A_premium": 47500, "Cat_A_quota": 1211, "Cat_A_bids": 1804, "Cat_A_ratio": 1.49, "Cat_B_premium": 66845, "Cat_B_quota": 709, "Cat_B_bids": 1048, "Cat_B_ratio": 1.48, "Cat_C_premium": 41350, "Cat_C_quota": 483, "Cat_C_bids": 762, "Cat_C_ratio": 1.58, "Cat_D_premium": 1617, "Cat_D_quota": 781, "Cat_D_bids": 951, "Cat_D_ratio": 1.22, "Cat_E_premium": 66400, "Cat_E_quota": 724, "Cat_E_bids": 1068, "Cat_E_ratio": 1.48, "spread_B_minus_A": 19345, "total_car_quota": 1920}, {"month": "2012-02", "Cat_A_premium": 54909, "Cat_A_quota": 1243, "Cat_A_bids": 2075, "Cat_A_ratio": 1.67, "Cat_B_premium": 76040, "Cat_B_quota": 701, "Cat_B_bids": 1215, "Cat_B_ratio": 1.73, "Cat_C_premium": 50902, "Cat_C_quota": 326, "Cat_C_bids": 555, "Cat_C_ratio": 1.7, "Cat_D_premium": 1907, "Cat_D_quota": 825, "Cat_D_bids": 1021, "Cat_D_ratio": 1.24, "Cat_E_premium": 75900, "Cat_E_quota": 626, "Cat_E_bids": 932, "Cat_E_ratio": 1.49, "spread_B_minus_A": 21131, "total_car_quota": 1944}, {"month": "2012-03", "Cat_A_premium": 56526, "Cat_A_quota": 1303, "Cat_A_bids": 1979, "Cat_A_ratio": 1.52, "Cat_B_premium": 80654, "Cat_B_quota": 706, "Cat_B_bids": 1155, "Cat_B_ratio": 1.64, "Cat_C_premium": 50760, "Cat_C_quota": 337, "Cat_C_bids": 488, "Cat_C_ratio": 1.45, "Cat_D_premium": 1745, "Cat_D_quota": 847, "Cat_D_bids": 1058, "Cat_D_ratio": 1.25, "Cat_E_premium": 78491, "Cat_E_quota": 636, "Cat_E_bids": 941, "Cat_E_ratio": 1.48, "spread_B_minus_A": 24128, "total_car_quota": 2009}, {"month": "2012-04", "Cat_A_premium": 61351, "Cat_A_quota": 1266, "Cat_A_bids": 1971, "Cat_A_ratio": 1.56, "Cat_B_premium": 87350, "Cat_B_quota": 701, "Cat_B_bids": 1046, "Cat_B_ratio": 1.49, "Cat_C_premium": 55789, "Cat_C_quota": 323, "Cat_C_bids": 483, "Cat_C_ratio": 1.5, "Cat_D_premium": 1910, "Cat_D_quota": 827, "Cat_D_bids": 1068, "Cat_D_ratio": 1.29, "Cat_E_premium": 88300, "Cat_E_quota": 617, "Cat_E_bids": 860, "Cat_E_ratio": 1.39, "spread_B_minus_A": 25999, "total_car_quota": 1967}, {"month": "2012-05", "Cat_A_premium": 60300, "Cat_A_quota": 1271, "Cat_A_bids": 1767, "Cat_A_ratio": 1.39, "Cat_B_premium": 88633, "Cat_B_quota": 703, "Cat_B_bids": 1027, "Cat_B_ratio": 1.46, "Cat_C_premium": 57830, "Cat_C_quota": 321, "Cat_C_bids": 423, "Cat_C_ratio": 1.32, "Cat_D_premium": 1956, "Cat_D_quota": 820, "Cat_D_bids": 1034, "Cat_D_ratio": 1.26, "Cat_E_premium": 87940, "Cat_E_quota": 632, "Cat_E_bids": 1001, "Cat_E_ratio": 1.58, "spread_B_minus_A": 28333, "total_car_quota": 1974}, {"month": "2012-06", "Cat_A_premium": 59004, "Cat_A_quota": 1301, "Cat_A_bids": 1924, "Cat_A_ratio": 1.48, "Cat_B_premium": 84200, "Cat_B_quota": 699, "Cat_B_bids": 967, "Cat_B_ratio": 1.38, "Cat_C_premium": 54512, "Cat_C_quota": 320, "Cat_C_bids": 500, "Cat_C_ratio": 1.56, "Cat_D_premium": 1812, "Cat_D_quota": 820, "Cat_D_bids": 1086, "Cat_D_ratio": 1.32, "Cat_E_premium": 85139, "Cat_E_quota": 632, "Cat_E_bids": 953, "Cat_E_ratio": 1.51, "spread_B_minus_A": 25196, "total_car_quota": 2000}, {"month": "2012-07", "Cat_A_premium": 64038, "Cat_A_quota": 1317, "Cat_A_bids": 1783, "Cat_A_ratio": 1.35, "Cat_B_premium": 86395, "Cat_B_quota": 711, "Cat_B_bids": 1008, "Cat_B_ratio": 1.42, "Cat_C_premium": 55680, "Cat_C_quota": 327, "Cat_C_bids": 456, "Cat_C_ratio": 1.39, "Cat_D_premium": 1810, "Cat_D_quota": 877, "Cat_D_bids": 1123, "Cat_D_ratio": 1.28, "Cat_E_premium": 89850, "Cat_E_quota": 622, "Cat_E_bids": 839, "Cat_E_ratio": 1.35, "spread_B_minus_A": 22357, "total_car_quota": 2028}, {"month": "2012-08", "Cat_A_premium": 70195, "Cat_A_quota": 821, "Cat_A_bids": 1254, "Cat_A_ratio": 1.53, "Cat_B_premium": 91252, "Cat_B_quota": 701, "Cat_B_bids": 1021, "Cat_B_ratio": 1.46, "Cat_C_premium": 58168, "Cat_C_quota": 364, "Cat_C_bids": 502, "Cat_C_ratio": 1.38, "Cat_D_premium": 2047, "Cat_D_quota": 904, "Cat_D_bids": 1194, "Cat_D_ratio": 1.32, "Cat_E_premium": 94512, "Cat_E_quota": 507, "Cat_E_bids": 655, "Cat_E_ratio": 1.29, "spread_B_minus_A": 21057, "total_car_quota": 1522}, {"month": "2012-09", "Cat_A_premium": 65500, "Cat_A_quota": 801, "Cat_A_bids": 1004, "Cat_A_ratio": 1.25, "Cat_B_premium": 84346, "Cat_B_quota": 706, "Cat_B_bids": 989, "Cat_B_ratio": 1.4, "Cat_C_premium": 57572, "Cat_C_quota": 365, "Cat_C_bids": 499, "Cat_C_ratio": 1.37, "Cat_D_premium": 1826, "Cat_D_quota": 900, "Cat_D_bids": 1141, "Cat_D_ratio": 1.27, "Cat_E_premium": 88994, "Cat_E_quota": 497, "Cat_E_bids": 770, "Cat_E_ratio": 1.55, "spread_B_minus_A": 18846, "total_car_quota": 1507}, {"month": "2012-10", "Cat_A_premium": 70000, "Cat_A_quota": 794, "Cat_A_bids": 1015, "Cat_A_ratio": 1.28, "Cat_B_premium": 82901, "Cat_B_quota": 703, "Cat_B_bids": 954, "Cat_B_ratio": 1.36, "Cat_C_premium": 56945, "Cat_C_quota": 366, "Cat_C_bids": 450, "Cat_C_ratio": 1.23, "Cat_D_premium": 1916, "Cat_D_quota": 910, "Cat_D_bids": 1236, "Cat_D_ratio": 1.36, "Cat_E_premium": 86944, "Cat_E_quota": 492, "Cat_E_bids": 683, "Cat_E_ratio": 1.39, "spread_B_minus_A": 12901, "total_car_quota": 1497}, {"month": "2012-11", "Cat_A_premium": 77246, "Cat_A_quota": 791, "Cat_A_bids": 1161, "Cat_A_ratio": 1.47, "Cat_B_premium": 92702, "Cat_B_quota": 701, "Cat_B_bids": 1060, "Cat_B_ratio": 1.51, "Cat_C_premium": 59673, "Cat_C_quota": 360, "Cat_C_bids": 522, "Cat_C_ratio": 1.45, "Cat_D_premium": 1824, "Cat_D_quota": 929, "Cat_D_bids": 1103, "Cat_D_ratio": 1.19, "Cat_E_premium": 93045, "Cat_E_quota": 502, "Cat_E_bids": 753, "Cat_E_ratio": 1.5, "spread_B_minus_A": 15456, "total_car_quota": 1492}, {"month": "2012-12", "Cat_A_premium": 80206, "Cat_A_quota": 790, "Cat_A_bids": 981, "Cat_A_ratio": 1.24, "Cat_B_premium": 91850, "Cat_B_quota": 710, "Cat_B_bids": 971, "Cat_B_ratio": 1.37, "Cat_C_premium": 62618, "Cat_C_quota": 363, "Cat_C_bids": 523, "Cat_C_ratio": 1.44, "Cat_D_premium": 1656, "Cat_D_quota": 904, "Cat_D_bids": 1124, "Cat_D_ratio": 1.24, "Cat_E_premium": 96495, "Cat_E_quota": 496, "Cat_E_bids": 735, "Cat_E_ratio": 1.48, "spread_B_minus_A": 11644, "total_car_quota": 1500}, {"month": "2013-01", "Cat_A_premium": 91555, "Cat_A_quota": 819, "Cat_A_bids": 1044, "Cat_A_ratio": 1.27, "Cat_B_premium": 95856, "Cat_B_quota": 714, "Cat_B_bids": 922, "Cat_B_ratio": 1.29, "Cat_C_premium": 58526, "Cat_C_quota": 377, "Cat_C_bids": 506, "Cat_C_ratio": 1.34, "Cat_D_premium": 1857, "Cat_D_quota": 923, "Cat_D_bids": 1053, "Cat_D_ratio": 1.14, "Cat_E_premium": 96995, "Cat_E_quota": 507, "Cat_E_bids": 737, "Cat_E_ratio": 1.45, "spread_B_minus_A": 4301, "total_car_quota": 1533}, {"month": "2013-02", "Cat_A_premium": 82705, "Cat_A_quota": 668, "Cat_A_bids": 845, "Cat_A_ratio": 1.26, "Cat_B_premium": 92784, "Cat_B_quota": 605, "Cat_B_bids": 840, "Cat_B_ratio": 1.39, "Cat_C_premium": 54239, "Cat_C_quota": 455, "Cat_C_bids": 601, "Cat_C_ratio": 1.32, "Cat_D_premium": 1647, "Cat_D_quota": 1012, "Cat_D_bids": 1226, "Cat_D_ratio": 1.21, "Cat_E_premium": 93400, "Cat_E_quota": 479, "Cat_E_bids": 665, "Cat_E_ratio": 1.39, "spread_B_minus_A": 10079, "total_car_quota": 1273}, {"month": "2013-03", "Cat_A_premium": 69449, "Cat_A_quota": 673, "Cat_A_bids": 2103, "Cat_A_ratio": 3.12, "Cat_B_premium": 65995, "Cat_B_quota": 633, "Cat_B_bids": 1968, "Cat_B_ratio": 3.11, "Cat_C_premium": 54006, "Cat_C_quota": 450, "Cat_C_bids": 686, "Cat_C_ratio": 1.52, "Cat_D_premium": 1902, "Cat_D_quota": 1053, "Cat_D_bids": 1303, "Cat_D_ratio": 1.24, "Cat_E_premium": 69151, "Cat_E_quota": 534, "Cat_E_bids": 1671, "Cat_E_ratio": 3.13, "spread_B_minus_A": -3454, "total_car_quota": 1306}, {"month": "2013-04", "Cat_A_premium": 61763, "Cat_A_quota": 674, "Cat_A_bids": 1959, "Cat_A_ratio": 2.91, "Cat_B_premium": 64505, "Cat_B_quota": 612, "Cat_B_bids": 1518, "Cat_B_ratio": 2.48, "Cat_C_premium": 57256, "Cat_C_quota": 452, "Cat_C_bids": 688, "Cat_C_ratio": 1.52, "Cat_D_premium": 1802, "Cat_D_quota": 1012, "Cat_D_bids": 1225, "Cat_D_ratio": 1.21, "Cat_E_premium": 64494, "Cat_E_quota": 485, "Cat_E_bids": 871, "Cat_E_ratio": 1.8, "spread_B_minus_A": 2742, "total_car_quota": 1286}, {"month": "2013-05", "Cat_A_premium": 63919, "Cat_A_quota": 669, "Cat_A_bids": 1800, "Cat_A_ratio": 2.69, "Cat_B_premium": 64502, "Cat_B_quota": 649, "Cat_B_bids": 1350, "Cat_B_ratio": 2.08, "Cat_C_premium": 56970, "Cat_C_quota": 458, "Cat_C_bids": 600, "Cat_C_ratio": 1.31, "Cat_D_premium": 1682, "Cat_D_quota": 1107, "Cat_D_bids": 1361, "Cat_D_ratio": 1.23, "Cat_E_premium": 64501, "Cat_E_quota": 490, "Cat_E_bids": 913, "Cat_E_ratio": 1.86, "spread_B_minus_A": 583, "total_car_quota": 1318}, {"month": "2013-06", "Cat_A_premium": 68602, "Cat_A_quota": 683, "Cat_A_bids": 1643, "Cat_A_ratio": 2.41, "Cat_B_premium": 78376, "Cat_B_quota": 607, "Cat_B_bids": 1466, "Cat_B_ratio": 2.42, "Cat_C_premium": 58495, "Cat_C_quota": 454, "Cat_C_bids": 581, "Cat_C_ratio": 1.28, "Cat_D_premium": 1706, "Cat_D_quota": 1065, "Cat_D_bids": 1263, "Cat_D_ratio": 1.19, "Cat_E_premium": 79500, "Cat_E_quota": 490, "Cat_E_bids": 1000, "Cat_E_ratio": 2.04, "spread_B_minus_A": 9774, "total_car_quota": 1290}, {"month": "2013-07", "Cat_A_premium": 73544, "Cat_A_quota": 672, "Cat_A_bids": 1337, "Cat_A_ratio": 1.99, "Cat_B_premium": 76750, "Cat_B_quota": 634, "Cat_B_bids": 1226, "Cat_B_ratio": 1.93, "Cat_C_premium": 63024, "Cat_C_quota": 458, "Cat_C_bids": 636, "Cat_C_ratio": 1.39, "Cat_D_premium": 1661, "Cat_D_quota": 1064, "Cat_D_bids": 1331, "Cat_D_ratio": 1.25, "Cat_E_premium": 76901, "Cat_E_quota": 528, "Cat_E_bids": 910, "Cat_E_ratio": 1.72, "spread_B_minus_A": 3206, "total_car_quota": 1306}, {"month": "2013-08", "Cat_A_premium": 75890, "Cat_A_quota": 739, "Cat_A_bids": 1350, "Cat_A_ratio": 1.83, "Cat_B_premium": 77104, "Cat_B_quota": 755, "Cat_B_bids": 1309, "Cat_B_ratio": 1.73, "Cat_C_premium": 69626, "Cat_C_quota": 521, "Cat_C_bids": 749, "Cat_C_ratio": 1.44, "Cat_D_premium": 1757, "Cat_D_quota": 973, "Cat_D_bids": 1183, "Cat_D_ratio": 1.22, "Cat_E_premium": 78606, "Cat_E_quota": 528, "Cat_E_bids": 792, "Cat_E_ratio": 1.5, "spread_B_minus_A": 1214, "total_car_quota": 1494}, {"month": "2013-09", "Cat_A_premium": 80528, "Cat_A_quota": 736, "Cat_A_bids": 1263, "Cat_A_ratio": 1.72, "Cat_B_premium": 81670, "Cat_B_quota": 758, "Cat_B_bids": 1326, "Cat_B_ratio": 1.75, "Cat_C_premium": 75000, "Cat_C_quota": 521, "Cat_C_bids": 661, "Cat_C_ratio": 1.27, "Cat_D_premium": 1682, "Cat_D_quota": 1004, "Cat_D_bids": 1148, "Cat_D_ratio": 1.14, "Cat_E_premium": 83500, "Cat_E_quota": 524, "Cat_E_bids": 890, "Cat_E_ratio": 1.7, "spread_B_minus_A": 1142, "total_car_quota": 1494}, {"month": "2013-10", "Cat_A_premium": 80944, "Cat_A_quota": 738, "Cat_A_bids": 1211, "Cat_A_ratio": 1.64, "Cat_B_premium": 90705, "Cat_B_quota": 758, "Cat_B_bids": 1164, "Cat_B_ratio": 1.54, "Cat_C_premium": 72156, "Cat_C_quota": 524, "Cat_C_bids": 673, "Cat_C_ratio": 1.28, "Cat_D_premium": 1882, "Cat_D_quota": 963, "Cat_D_bids": 1153, "Cat_D_ratio": 1.2, "Cat_E_premium": 93089, "Cat_E_quota": 611, "Cat_E_bids": 820, "Cat_E_ratio": 1.34, "spread_B_minus_A": 9761, "total_car_quota": 1496}, {"month": "2013-11", "Cat_A_premium": 73800, "Cat_A_quota": 732, "Cat_A_bids": 1240, "Cat_A_ratio": 1.69, "Cat_B_premium": 81939, "Cat_B_quota": 755, "Cat_B_bids": 1018, "Cat_B_ratio": 1.35, "Cat_C_premium": 55252, "Cat_C_quota": 515, "Cat_C_bids": 824, "Cat_C_ratio": 1.6, "Cat_D_premium": 1711, "Cat_D_quota": 968, "Cat_D_bids": 1112, "Cat_D_ratio": 1.15, "Cat_E_premium": 86000, "Cat_E_quota": 539, "Cat_E_bids": 789, "Cat_E_ratio": 1.46, "spread_B_minus_A": 8139, "total_car_quota": 1487}, {"month": "2013-12", "Cat_A_premium": 73581, "Cat_A_quota": 731, "Cat_A_bids": 1165, "Cat_A_ratio": 1.59, "Cat_B_premium": 74355, "Cat_B_quota": 750, "Cat_B_bids": 1049, "Cat_B_ratio": 1.4, "Cat_C_premium": 49556, "Cat_C_quota": 521, "Cat_C_bids": 697, "Cat_C_ratio": 1.34, "Cat_D_premium": 1797, "Cat_D_quota": 1005, "Cat_D_bids": 1327, "Cat_D_ratio": 1.32, "Cat_E_premium": 77201, "Cat_E_quota": 532, "Cat_E_bids": 740, "Cat_E_ratio": 1.39, "spread_B_minus_A": 774, "total_car_quota": 1481}, {"month": "2014-01", "Cat_A_premium": 72330, "Cat_A_quota": 732, "Cat_A_bids": 1347, "Cat_A_ratio": 1.84, "Cat_B_premium": 78850, "Cat_B_quota": 779, "Cat_B_bids": 1093, "Cat_B_ratio": 1.4, "Cat_C_premium": 49445, "Cat_C_quota": 522, "Cat_C_bids": 693, "Cat_C_ratio": 1.33, "Cat_D_premium": 2346, "Cat_D_quota": 992, "Cat_D_bids": 1338, "Cat_D_ratio": 1.35, "Cat_E_premium": 78905, "Cat_E_quota": 522, "Cat_E_bids": 765, "Cat_E_ratio": 1.47, "spread_B_minus_A": 6520, "total_car_quota": 1511}, {"month": "2014-02", "Cat_A_premium": 74382, "Cat_A_quota": 724, "Cat_A_bids": 1419, "Cat_A_ratio": 1.96, "Cat_B_premium": 76952, "Cat_B_quota": 715, "Cat_B_bids": 1042, "Cat_B_ratio": 1.46, "Cat_C_premium": 51946, "Cat_C_quota": 544, "Cat_C_bids": 756, "Cat_C_ratio": 1.39, "Cat_D_premium": 3276, "Cat_D_quota": 721, "Cat_D_bids": 1028, "Cat_D_ratio": 1.43, "Cat_E_premium": 78002, "Cat_E_quota": 401, "Cat_E_bids": 672, "Cat_E_ratio": 1.68, "spread_B_minus_A": 2570, "total_car_quota": 1439}, {"month": "2014-03", "Cat_A_premium": 77800, "Cat_A_quota": 727, "Cat_A_bids": 1192, "Cat_A_ratio": 1.64, "Cat_B_premium": 81805, "Cat_B_quota": 703, "Cat_B_bids": 1023, "Cat_B_ratio": 1.46, "Cat_C_premium": 55096, "Cat_C_quota": 531, "Cat_C_bids": 795, "Cat_C_ratio": 1.5, "Cat_D_premium": 4145, "Cat_D_quota": 728, "Cat_D_bids": 932, "Cat_D_ratio": 1.28, "Cat_E_premium": 83000, "Cat_E_quota": 386, "Cat_E_bids": 585, "Cat_E_ratio": 1.52, "spread_B_minus_A": 4005, "total_car_quota": 1430}, {"month": "2014-04", "Cat_A_premium": 74368, "Cat_A_quota": 728, "Cat_A_bids": 1050, "Cat_A_ratio": 1.44, "Cat_B_premium": 79757, "Cat_B_quota": 714, "Cat_B_bids": 1009, "Cat_B_ratio": 1.41, "Cat_C_premium": 41196, "Cat_C_quota": 537, "Cat_C_bids": 695, "Cat_C_ratio": 1.29, "Cat_D_premium": 4496, "Cat_D_quota": 753, "Cat_D_bids": 1012, "Cat_D_ratio": 1.34, "Cat_E_premium": 78955, "Cat_E_quota": 391, "Cat_E_bids": 593, "Cat_E_ratio": 1.52, "spread_B_minus_A": 5389, "total_car_quota": 1442}, {"month": "2014-05", "Cat_A_premium": 62846, "Cat_A_quota": 1022, "Cat_A_bids": 1673, "Cat_A_ratio": 1.64, "Cat_B_premium": 69052, "Cat_B_quota": 967, "Cat_B_bids": 1494, "Cat_B_ratio": 1.54, "Cat_C_premium": 38595, "Cat_C_quota": 781, "Cat_C_bids": 1424, "Cat_C_ratio": 1.82, "Cat_D_premium": 4002, "Cat_D_quota": 701, "Cat_D_bids": 937, "Cat_D_ratio": 1.34, "Cat_E_premium": 66396, "Cat_E_quota": 589, "Cat_E_bids": 1022, "Cat_E_ratio": 1.74, "spread_B_minus_A": 6206, "total_car_quota": 1989}, {"month": "2014-06", "Cat_A_premium": 62544, "Cat_A_quota": 1016, "Cat_A_bids": 2080, "Cat_A_ratio": 2.05, "Cat_B_premium": 66502, "Cat_B_quota": 984, "Cat_B_bids": 1523, "Cat_B_ratio": 1.55, "Cat_C_premium": 42501, "Cat_C_quota": 776, "Cat_C_bids": 1214, "Cat_C_ratio": 1.56, "Cat_D_premium": 3990, "Cat_D_quota": 731, "Cat_D_bids": 952, "Cat_D_ratio": 1.3, "Cat_E_premium": 66318, "Cat_E_quota": 595, "Cat_E_bids": 899, "Cat_E_ratio": 1.51, "spread_B_minus_A": 3958, "total_car_quota": 2000}, {"month": "2014-07", "Cat_A_premium": 62440, "Cat_A_quota": 1022, "Cat_A_bids": 2265, "Cat_A_ratio": 2.22, "Cat_B_premium": 64945, "Cat_B_quota": 991, "Cat_B_bids": 1662, "Cat_B_ratio": 1.68, "Cat_C_premium": 47700, "Cat_C_quota": 783, "Cat_C_bids": 1432, "Cat_C_ratio": 1.83, "Cat_D_premium": 4126, "Cat_D_quota": 691, "Cat_D_bids": 825, "Cat_D_ratio": 1.19, "Cat_E_premium": 64002, "Cat_E_quota": 613, "Cat_E_bids": 924, "Cat_E_ratio": 1.51, "spread_B_minus_A": 2505, "total_car_quota": 2013}, {"month": "2014-08", "Cat_A_premium": 65155, "Cat_A_quota": 1149, "Cat_A_bids": 2080, "Cat_A_ratio": 1.81, "Cat_B_premium": 70840, "Cat_B_quota": 1013, "Cat_B_bids": 2227, "Cat_B_ratio": 2.2, "Cat_C_premium": 53200, "Cat_C_quota": 524, "Cat_C_bids": 946, "Cat_C_ratio": 1.81, "Cat_D_premium": 4354, "Cat_D_quota": 638, "Cat_D_bids": 721, "Cat_D_ratio": 1.13, "Cat_E_premium": 70906, "Cat_E_quota": 486, "Cat_E_bids": 787, "Cat_E_ratio": 1.62, "spread_B_minus_A": 5685, "total_car_quota": 2162}, {"month": "2014-09", "Cat_A_premium": 63420, "Cat_A_quota": 1145, "Cat_A_bids": 1605, "Cat_A_ratio": 1.4, "Cat_B_premium": 72500, "Cat_B_quota": 1020, "Cat_B_bids": 1694, "Cat_B_ratio": 1.66, "Cat_C_premium": 49895, "Cat_C_quota": 519, "Cat_C_bids": 866, "Cat_C_ratio": 1.67, "Cat_D_premium": 4478, "Cat_D_quota": 636, "Cat_D_bids": 776, "Cat_D_ratio": 1.22, "Cat_E_premium": 74602, "Cat_E_quota": 497, "Cat_E_bids": 780, "Cat_E_ratio": 1.57, "spread_B_minus_A": 9080, "total_car_quota": 2165}, {"month": "2014-10", "Cat_A_premium": 63935, "Cat_A_quota": 1147, "Cat_A_bids": 2189, "Cat_A_ratio": 1.91, "Cat_B_premium": 72091, "Cat_B_quota": 1012, "Cat_B_bids": 1674, "Cat_B_ratio": 1.65, "Cat_C_premium": 59194, "Cat_C_quota": 526, "Cat_C_bids": 932, "Cat_C_ratio": 1.77, "Cat_D_premium": 4606, "Cat_D_quota": 633, "Cat_D_bids": 933, "Cat_D_ratio": 1.47, "Cat_E_premium": 72102, "Cat_E_quota": 487, "Cat_E_bids": 725, "Cat_E_ratio": 1.49, "spread_B_minus_A": 8156, "total_car_quota": 2159}, {"month": "2014-11", "Cat_A_premium": 66394, "Cat_A_quota": 1404, "Cat_A_bids": 2340, "Cat_A_ratio": 1.67, "Cat_B_premium": 71890, "Cat_B_quota": 1144, "Cat_B_bids": 1732, "Cat_B_ratio": 1.51, "Cat_C_premium": 64351, "Cat_C_quota": 285, "Cat_C_bids": 517, "Cat_C_ratio": 1.81, "Cat_D_premium": 4240, "Cat_D_quota": 640, "Cat_D_bids": 769, "Cat_D_ratio": 1.2, "Cat_E_premium": 72600, "Cat_E_quota": 535, "Cat_E_bids": 785, "Cat_E_ratio": 1.47, "spread_B_minus_A": 5496, "total_car_quota": 2548}, {"month": "2014-12", "Cat_A_premium": 66489, "Cat_A_quota": 1414, "Cat_A_bids": 1864, "Cat_A_ratio": 1.32, "Cat_B_premium": 74194, "Cat_B_quota": 1163, "Cat_B_bids": 1628, "Cat_B_ratio": 1.4, "Cat_C_premium": 56050, "Cat_C_quota": 290, "Cat_C_bids": 464, "Cat_C_ratio": 1.6, "Cat_D_premium": 4261, "Cat_D_quota": 637, "Cat_D_bids": 759, "Cat_D_ratio": 1.19, "Cat_E_premium": 75447, "Cat_E_quota": 529, "Cat_E_bids": 816, "Cat_E_ratio": 1.54, "spread_B_minus_A": 7705, "total_car_quota": 2577}, {"month": "2015-01", "Cat_A_premium": 65506, "Cat_A_quota": 1409, "Cat_A_bids": 2008, "Cat_A_ratio": 1.43, "Cat_B_premium": 76089, "Cat_B_quota": 1147, "Cat_B_bids": 1748, "Cat_B_ratio": 1.52, "Cat_C_premium": 55012, "Cat_C_quota": 296, "Cat_C_bids": 543, "Cat_C_ratio": 1.83, "Cat_D_premium": 4646, "Cat_D_quota": 687, "Cat_D_bids": 883, "Cat_D_ratio": 1.29, "Cat_E_premium": 75995, "Cat_E_quota": 536, "Cat_E_bids": 817, "Cat_E_ratio": 1.52, "spread_B_minus_A": 10583, "total_car_quota": 2556}, {"month": "2015-02", "Cat_A_premium": 59600, "Cat_A_quota": 1980, "Cat_A_bids": 2589, "Cat_A_ratio": 1.31, "Cat_B_premium": 68820, "Cat_B_quota": 1446, "Cat_B_bids": 1996, "Cat_B_ratio": 1.38, "Cat_C_premium": 52652, "Cat_C_quota": 370, "Cat_C_bids": 644, "Cat_C_ratio": 1.74, "Cat_D_premium": 5652, "Cat_D_quota": 578, "Cat_D_bids": 780, "Cat_D_ratio": 1.35, "Cat_E_premium": 69911, "Cat_E_quota": 374, "Cat_E_bids": 661, "Cat_E_ratio": 1.77, "spread_B_minus_A": 9220, "total_car_quota": 3426}, {"month": "2015-03", "Cat_A_premium": 63055, "Cat_A_quota": 1974, "Cat_A_bids": 4371, "Cat_A_ratio": 2.21, "Cat_B_premium": 70278, "Cat_B_quota": 1446, "Cat_B_bids": 2593, "Cat_B_ratio": 1.79, "Cat_C_premium": 58250, "Cat_C_quota": 370, "Cat_C_bids": 660, "Cat_C_ratio": 1.78, "Cat_D_premium": 5556, "Cat_D_quota": 575, "Cat_D_bids": 728, "Cat_D_ratio": 1.27, "Cat_E_premium": 71300, "Cat_E_quota": 349, "Cat_E_bids": 612, "Cat_E_ratio": 1.75, "spread_B_minus_A": 7223, "total_car_quota": 3420}, {"month": "2015-04", "Cat_A_premium": 67675, "Cat_A_quota": 1975, "Cat_A_bids": 4395, "Cat_A_ratio": 2.23, "Cat_B_premium": 77306, "Cat_B_quota": 1450, "Cat_B_bids": 3186, "Cat_B_ratio": 2.2, "Cat_C_premium": 58501, "Cat_C_quota": 382, "Cat_C_bids": 574, "Cat_C_ratio": 1.5, "Cat_D_premium": 6556, "Cat_D_quota": 571, "Cat_D_bids": 818, "Cat_D_ratio": 1.43, "Cat_E_premium": 78750, "Cat_E_quota": 363, "Cat_E_bids": 642, "Cat_E_ratio": 1.77, "spread_B_minus_A": 9631, "total_car_quota": 3425}, {"month": "2015-05", "Cat_A_premium": 67590, "Cat_A_quota": 2878, "Cat_A_bids": 5242, "Cat_A_ratio": 1.82, "Cat_B_premium": 76301, "Cat_B_quota": 1882, "Cat_B_bids": 3032, "Cat_B_ratio": 1.61, "Cat_C_premium": 51050, "Cat_C_quota": 743, "Cat_C_bids": 1091, "Cat_C_ratio": 1.47, "Cat_D_premium": 6506, "Cat_D_quota": 668, "Cat_D_bids": 895, "Cat_D_ratio": 1.34, "Cat_E_premium": 78002, "Cat_E_quota": 575, "Cat_E_bids": 809, "Cat_E_ratio": 1.41, "spread_B_minus_A": 8711, "total_car_quota": 4760}, {"month": "2015-06", "Cat_A_premium": 63500, "Cat_A_quota": 2861, "Cat_A_bids": 3709, "Cat_A_ratio": 1.3, "Cat_B_premium": 73254, "Cat_B_quota": 1857, "Cat_B_bids": 2528, "Cat_B_ratio": 1.36, "Cat_C_premium": 50701, "Cat_C_quota": 744, "Cat_C_bids": 989, "Cat_C_ratio": 1.33, "Cat_D_premium": 6455, "Cat_D_quota": 702, "Cat_D_bids": 878, "Cat_D_ratio": 1.25, "Cat_E_premium": 75151, "Cat_E_quota": 544, "Cat_E_bids": 765, "Cat_E_ratio": 1.41, "spread_B_minus_A": 9754, "total_car_quota": 4718}, {"month": "2015-07", "Cat_A_premium": 57294, "Cat_A_quota": 2901, "Cat_A_bids": 3857, "Cat_A_ratio": 1.33, "Cat_B_premium": 61805, "Cat_B_quota": 1864, "Cat_B_bids": 2443, "Cat_B_ratio": 1.31, "Cat_C_premium": 50002, "Cat_C_quota": 741, "Cat_C_bids": 931, "Cat_C_ratio": 1.26, "Cat_D_premium": 6410, "Cat_D_quota": 661, "Cat_D_bids": 911, "Cat_D_ratio": 1.38, "Cat_E_premium": 64551, "Cat_E_quota": 546, "Cat_E_bids": 852, "Cat_E_ratio": 1.56, "spread_B_minus_A": 4511, "total_car_quota": 4765}, {"month": "2015-08", "Cat_A_premium": 56854, "Cat_A_quota": 3444, "Cat_A_bids": 5043, "Cat_A_ratio": 1.46, "Cat_B_premium": 61464, "Cat_B_quota": 2115, "Cat_B_bids": 3185, "Cat_B_ratio": 1.51, "Cat_C_premium": 47902, "Cat_C_quota": 365, "Cat_C_bids": 545, "Cat_C_ratio": 1.49, "Cat_D_premium": 6156, "Cat_D_quota": 722, "Cat_D_bids": 945, "Cat_D_ratio": 1.31, "Cat_E_premium": 59443, "Cat_E_quota": 726, "Cat_E_bids": 1216, "Cat_E_ratio": 1.67, "spread_B_minus_A": 4610, "total_car_quota": 5559}, {"month": "2015-09", "Cat_A_premium": 56244, "Cat_A_quota": 3375, "Cat_A_bids": 4829, "Cat_A_ratio": 1.43, "Cat_B_premium": 61051, "Cat_B_quota": 2117, "Cat_B_bids": 2999, "Cat_B_ratio": 1.42, "Cat_C_premium": 46045, "Cat_C_quota": 364, "Cat_C_bids": 727, "Cat_C_ratio": 2.0, "Cat_D_premium": 6335, "Cat_D_quota": 757, "Cat_D_bids": 982, "Cat_D_ratio": 1.3, "Cat_E_premium": 61155, "Cat_E_quota": 731, "Cat_E_bids": 1122, "Cat_E_ratio": 1.53, "spread_B_minus_A": 4807, "total_car_quota": 5492}, {"month": "2015-10", "Cat_A_premium": 56651, "Cat_A_quota": 3377, "Cat_A_bids": 4439, "Cat_A_ratio": 1.31, "Cat_B_premium": 59040, "Cat_B_quota": 2130, "Cat_B_bids": 2740, "Cat_B_ratio": 1.29, "Cat_C_premium": 43596, "Cat_C_quota": 374, "Cat_C_bids": 671, "Cat_C_ratio": 1.79, "Cat_D_premium": 6252, "Cat_D_quota": 755, "Cat_D_bids": 868, "Cat_D_ratio": 1.15, "Cat_E_premium": 59400, "Cat_E_quota": 727, "Cat_E_bids": 1166, "Cat_E_ratio": 1.6, "spread_B_minus_A": 2389, "total_car_quota": 5507}, {"month": "2015-11", "Cat_A_premium": 57600, "Cat_A_quota": 3326, "Cat_A_bids": 4149, "Cat_A_ratio": 1.25, "Cat_B_premium": 59302, "Cat_B_quota": 2066, "Cat_B_bids": 2655, "Cat_B_ratio": 1.29, "Cat_C_premium": 44850, "Cat_C_quota": 488, "Cat_C_bids": 761, "Cat_C_ratio": 1.56, "Cat_D_premium": 6207, "Cat_D_quota": 658, "Cat_D_bids": 838, "Cat_D_ratio": 1.27, "Cat_E_premium": 61354, "Cat_E_quota": 732, "Cat_E_bids": 1024, "Cat_E_ratio": 1.4, "spread_B_minus_A": 1702, "total_car_quota": 5392}, {"month": "2015-12", "Cat_A_premium": 55645, "Cat_A_quota": 3367, "Cat_A_bids": 4110, "Cat_A_ratio": 1.22, "Cat_B_premium": 57501, "Cat_B_quota": 2058, "Cat_B_bids": 2524, "Cat_B_ratio": 1.23, "Cat_C_premium": 47051, "Cat_C_quota": 485, "Cat_C_bids": 656, "Cat_C_ratio": 1.35, "Cat_D_premium": 6550, "Cat_D_quota": 687, "Cat_D_bids": 808, "Cat_D_ratio": 1.18, "Cat_E_premium": 58752, "Cat_E_quota": 724, "Cat_E_bids": 1007, "Cat_E_ratio": 1.39, "spread_B_minus_A": 1856, "total_car_quota": 5425}, {"month": "2016-01", "Cat_A_premium": 48152, "Cat_A_quota": 3318, "Cat_A_bids": 5450, "Cat_A_ratio": 1.64, "Cat_B_premium": 52504, "Cat_B_quota": 2053, "Cat_B_bids": 2596, "Cat_B_ratio": 1.26, "Cat_C_premium": 44269, "Cat_C_quota": 488, "Cat_C_bids": 740, "Cat_C_ratio": 1.52, "Cat_D_premium": 6700, "Cat_D_quota": 655, "Cat_D_bids": 824, "Cat_D_ratio": 1.26, "Cat_E_premium": 53044, "Cat_E_quota": 722, "Cat_E_bids": 1211, "Cat_E_ratio": 1.68, "spread_B_minus_A": 4352, "total_car_quota": 5371}, {"month": "2016-02", "Cat_A_premium": 44826, "Cat_A_quota": 4087, "Cat_A_bids": 5937, "Cat_A_ratio": 1.45, "Cat_B_premium": 42790, "Cat_B_quota": 2424, "Cat_B_bids": 4522, "Cat_B_ratio": 1.87, "Cat_C_premium": 45018, "Cat_C_quota": 329, "Cat_C_bids": 468, "Cat_C_ratio": 1.42, "Cat_D_premium": 6428, "Cat_D_quota": 730, "Cat_D_bids": 949, "Cat_D_ratio": 1.3, "Cat_E_premium": 44505, "Cat_E_quota": 902, "Cat_E_bids": 1697, "Cat_E_ratio": 1.88, "spread_B_minus_A": -2036, "total_car_quota": 6511}, {"month": "2016-03", "Cat_A_premium": 45252, "Cat_A_quota": 4086, "Cat_A_bids": 7354, "Cat_A_ratio": 1.8, "Cat_B_premium": 47053, "Cat_B_quota": 2429, "Cat_B_bids": 5197, "Cat_B_ratio": 2.14, "Cat_C_premium": 47696, "Cat_C_quota": 329, "Cat_C_bids": 485, "Cat_C_ratio": 1.47, "Cat_D_premium": 6546, "Cat_D_quota": 714, "Cat_D_bids": 859, "Cat_D_ratio": 1.2, "Cat_E_premium": 47334, "Cat_E_quota": 901, "Cat_E_bids": 1863, "Cat_E_ratio": 2.07, "spread_B_minus_A": 1801, "total_car_quota": 6515}, {"month": "2016-04", "Cat_A_premium": 46654, "Cat_A_quota": 4167, "Cat_A_bids": 7046, "Cat_A_ratio": 1.69, "Cat_B_premium": 48301, "Cat_B_quota": 2429, "Cat_B_bids": 4611, "Cat_B_ratio": 1.9, "Cat_C_premium": 43608, "Cat_C_quota": 327, "Cat_C_bids": 476, "Cat_C_ratio": 1.46, "Cat_D_premium": 6502, "Cat_D_quota": 714, "Cat_D_bids": 892, "Cat_D_ratio": 1.25, "Cat_E_premium": 48506, "Cat_E_quota": 1036, "Cat_E_bids": 2231, "Cat_E_ratio": 2.15, "spread_B_minus_A": 1647, "total_car_quota": 6596}, {"month": "2016-05", "Cat_A_premium": 47454, "Cat_A_quota": 4435, "Cat_A_bids": 6673, "Cat_A_ratio": 1.5, "Cat_B_premium": 50083, "Cat_B_quota": 2999, "Cat_B_bids": 4757, "Cat_B_ratio": 1.59, "Cat_C_premium": 42652, "Cat_C_quota": 461, "Cat_C_bids": 679, "Cat_C_ratio": 1.47, "Cat_D_premium": 6302, "Cat_D_quota": 813, "Cat_D_bids": 1019, "Cat_D_ratio": 1.25, "Cat_E_premium": 49350, "Cat_E_quota": 1284, "Cat_E_bids": 2195, "Cat_E_ratio": 1.71, "spread_B_minus_A": 2629, "total_car_quota": 7434}, {"month": "2016-06", "Cat_A_premium": 54447, "Cat_A_quota": 4470, "Cat_A_bids": 8502, "Cat_A_ratio": 1.9, "Cat_B_premium": 56505, "Cat_B_quota": 2933, "Cat_B_bids": 6350, "Cat_B_ratio": 2.17, "Cat_C_premium": 47218, "Cat_C_quota": 456, "Cat_C_bids": 689, "Cat_C_ratio": 1.51, "Cat_D_premium": 6302, "Cat_D_quota": 829, "Cat_D_bids": 1024, "Cat_D_ratio": 1.24, "Cat_E_premium": 56245, "Cat_E_quota": 1074, "Cat_E_bids": 1869, "Cat_E_ratio": 1.74, "spread_B_minus_A": 2058, "total_car_quota": 7403}, {"month": "2016-07", "Cat_A_premium": 52650, "Cat_A_quota": 4494, "Cat_A_bids": 6389, "Cat_A_ratio": 1.42, "Cat_B_premium": 56798, "Cat_B_quota": 2932, "Cat_B_bids": 4986, "Cat_B_ratio": 1.7, "Cat_C_premium": 48890, "Cat_C_quota": 467, "Cat_C_bids": 654, "Cat_C_ratio": 1.4, "Cat_D_premium": 6157, "Cat_D_quota": 839, "Cat_D_bids": 1111, "Cat_D_ratio": 1.32, "Cat_E_premium": 56752, "Cat_E_quota": 1038, "Cat_E_bids": 1571, "Cat_E_ratio": 1.51, "spread_B_minus_A": 4148, "total_car_quota": 7426}, {"month": "2016-08", "Cat_A_premium": 52918, "Cat_A_quota": 4052, "Cat_A_bids": 5515, "Cat_A_ratio": 1.36, "Cat_B_premium": 57202, "Cat_B_quota": 2672, "Cat_B_bids": 4244, "Cat_B_ratio": 1.59, "Cat_C_premium": 48152, "Cat_C_quota": 357, "Cat_C_bids": 481, "Cat_C_ratio": 1.35, "Cat_D_premium": 6279, "Cat_D_quota": 768, "Cat_D_bids": 1099, "Cat_D_ratio": 1.43, "Cat_E_premium": 57578, "Cat_E_quota": 879, "Cat_E_bids": 1228, "Cat_E_ratio": 1.4, "spread_B_minus_A": 4284, "total_car_quota": 6724}, {"month": "2016-09", "Cat_A_premium": 50753, "Cat_A_quota": 4075, "Cat_A_bids": 5349, "Cat_A_ratio": 1.31, "Cat_B_premium": 56252, "Cat_B_quota": 2710, "Cat_B_bids": 4200, "Cat_B_ratio": 1.55, "Cat_C_premium": 49846, "Cat_C_quota": 352, "Cat_C_bids": 497, "Cat_C_ratio": 1.41, "Cat_D_premium": 6476, "Cat_D_quota": 765, "Cat_D_bids": 999, "Cat_D_ratio": 1.31, "Cat_E_premium": 56045, "Cat_E_quota": 887, "Cat_E_bids": 1315, "Cat_E_ratio": 1.48, "spread_B_minus_A": 5499, "total_car_quota": 6785}, {"month": "2016-10", "Cat_A_premium": 51249, "Cat_A_quota": 4087, "Cat_A_bids": 5522, "Cat_A_ratio": 1.35, "Cat_B_premium": 54706, "Cat_B_quota": 2690, "Cat_B_bids": 3553, "Cat_B_ratio": 1.32, "Cat_C_premium": 47146, "Cat_C_quota": 364, "Cat_C_bids": 484, "Cat_C_ratio": 1.33, "Cat_D_premium": 6354, "Cat_D_quota": 747, "Cat_D_bids": 928, "Cat_D_ratio": 1.24, "Cat_E_premium": 55270, "Cat_E_quota": 865, "Cat_E_bids": 1320, "Cat_E_ratio": 1.53, "spread_B_minus_A": 3457, "total_car_quota": 6777}, {"month": "2016-11", "Cat_A_premium": 51810, "Cat_A_quota": 3775, "Cat_A_bids": 5336, "Cat_A_ratio": 1.41, "Cat_B_premium": 54604, "Cat_B_quota": 2601, "Cat_B_bids": 3720, "Cat_B_ratio": 1.43, "Cat_C_premium": 48502, "Cat_C_quota": 367, "Cat_C_bids": 569, "Cat_C_ratio": 1.55, "Cat_D_premium": 6262, "Cat_D_quota": 774, "Cat_D_bids": 977, "Cat_D_ratio": 1.26, "Cat_E_premium": 55450, "Cat_E_quota": 802, "Cat_E_bids": 1172, "Cat_E_ratio": 1.46, "spread_B_minus_A": 2794, "total_car_quota": 6376}, {"month": "2016-12", "Cat_A_premium": 48876, "Cat_A_quota": 3688, "Cat_A_bids": 4889, "Cat_A_ratio": 1.33, "Cat_B_premium": 48669, "Cat_B_quota": 2489, "Cat_B_bids": 3546, "Cat_B_ratio": 1.42, "Cat_C_premium": 50354, "Cat_C_quota": 367, "Cat_C_bids": 536, "Cat_C_ratio": 1.46, "Cat_D_premium": 6107, "Cat_D_quota": 789, "Cat_D_bids": 920, "Cat_D_ratio": 1.17, "Cat_E_premium": 50200, "Cat_E_quota": 817, "Cat_E_bids": 1311, "Cat_E_ratio": 1.6, "spread_B_minus_A": -207, "total_car_quota": 6177}, {"month": "2017-01", "Cat_A_premium": 50495, "Cat_A_quota": 3723, "Cat_A_bids": 4697, "Cat_A_ratio": 1.26, "Cat_B_premium": 52956, "Cat_B_quota": 2498, "Cat_B_bids": 3802, "Cat_B_ratio": 1.52, "Cat_C_premium": 46652, "Cat_C_quota": 369, "Cat_C_bids": 525, "Cat_C_ratio": 1.42, "Cat_D_premium": 6052, "Cat_D_quota": 753, "Cat_D_bids": 850, "Cat_D_ratio": 1.13, "Cat_E_premium": 52800, "Cat_E_quota": 801, "Cat_E_bids": 1310, "Cat_E_ratio": 1.64, "spread_B_minus_A": 2461, "total_car_quota": 6221}, {"month": "2017-02", "Cat_A_premium": 48916, "Cat_A_quota": 4193, "Cat_A_bids": 5617, "Cat_A_ratio": 1.34, "Cat_B_premium": 49415, "Cat_B_quota": 2743, "Cat_B_bids": 3909, "Cat_B_ratio": 1.43, "Cat_C_premium": 49356, "Cat_C_quota": 338, "Cat_C_bids": 517, "Cat_C_ratio": 1.53, "Cat_D_premium": 6606, "Cat_D_quota": 740, "Cat_D_bids": 1287, "Cat_D_ratio": 1.74, "Cat_E_premium": 49778, "Cat_E_quota": 988, "Cat_E_bids": 1605, "Cat_E_ratio": 1.62, "spread_B_minus_A": 499, "total_car_quota": 6936}, {"month": "2017-03", "Cat_A_premium": 51277, "Cat_A_quota": 4157, "Cat_A_bids": 6151, "Cat_A_ratio": 1.48, "Cat_B_premium": 53650, "Cat_B_quota": 2728, "Cat_B_bids": 4379, "Cat_B_ratio": 1.61, "Cat_C_premium": 48019, "Cat_C_quota": 334, "Cat_C_bids": 467, "Cat_C_ratio": 1.4, "Cat_D_premium": 7782, "Cat_D_quota": 723, "Cat_D_bids": 999, "Cat_D_ratio": 1.38, "Cat_E_premium": 53751, "Cat_E_quota": 981, "Cat_E_bids": 1546, "Cat_E_ratio": 1.58, "spread_B_minus_A": 2373, "total_car_quota": 6885}, {"month": "2017-04", "Cat_A_premium": 51800, "Cat_A_quota": 4120, "Cat_A_bids": 4928, "Cat_A_ratio": 1.2, "Cat_B_premium": 54406, "Cat_B_quota": 2729, "Cat_B_bids": 3970, "Cat_B_ratio": 1.45, "Cat_C_premium": 36204, "Cat_C_quota": 325, "Cat_C_bids": 860, "Cat_C_ratio": 2.65, "Cat_D_premium": 7150, "Cat_D_quota": 702, "Cat_D_bids": 994, "Cat_D_ratio": 1.42, "Cat_E_premium": 54586, "Cat_E_quota": 968, "Cat_E_bids": 1460, "Cat_E_ratio": 1.51, "spread_B_minus_A": 2606, "total_car_quota": 6849}, {"month": "2017-05", "Cat_A_premium": 48798, "Cat_A_quota": 3825, "Cat_A_bids": 4841, "Cat_A_ratio": 1.27, "Cat_B_premium": 54208, "Cat_B_quota": 2645, "Cat_B_bids": 3721, "Cat_B_ratio": 1.41, "Cat_C_premium": 28314, "Cat_C_quota": 2169, "Cat_C_bids": 5078, "Cat_C_ratio": 2.34, "Cat_D_premium": 6201, "Cat_D_quota": 931, "Cat_D_bids": 1169, "Cat_D_ratio": 1.26, "Cat_E_premium": 53500, "Cat_E_quota": 1061, "Cat_E_bids": 1486, "Cat_E_ratio": 1.4, "spread_B_minus_A": 5410, "total_car_quota": 6470}, {"month": "2017-06", "Cat_A_premium": 44001, "Cat_A_quota": 3804, "Cat_A_bids": 4547, "Cat_A_ratio": 1.2, "Cat_B_premium": 48806, "Cat_B_quota": 2646, "Cat_B_bids": 3233, "Cat_B_ratio": 1.22, "Cat_C_premium": 37690, "Cat_C_quota": 2177, "Cat_C_bids": 4434, "Cat_C_ratio": 2.04, "Cat_D_premium": 6051, "Cat_D_quota": 935, "Cat_D_bids": 1674, "Cat_D_ratio": 1.79, "Cat_E_premium": 49264, "Cat_E_quota": 1081, "Cat_E_bids": 1803, "Cat_E_ratio": 1.67, "spread_B_minus_A": 4805, "total_car_quota": 6450}, {"month": "2017-07", "Cat_A_premium": 43402, "Cat_A_quota": 3811, "Cat_A_bids": 4685, "Cat_A_ratio": 1.23, "Cat_B_premium": 49902, "Cat_B_quota": 2644, "Cat_B_bids": 3694, "Cat_B_ratio": 1.4, "Cat_C_premium": 41510, "Cat_C_quota": 2173, "Cat_C_bids": 4132, "Cat_C_ratio": 1.9, "Cat_D_premium": 5926, "Cat_D_quota": 1026, "Cat_D_bids": 1863, "Cat_D_ratio": 1.82, "Cat_E_premium": 50000, "Cat_E_quota": 1090, "Cat_E_bids": 1813, "Cat_E_ratio": 1.66, "spread_B_minus_A": 6500, "total_car_quota": 6455}, {"month": "2017-08", "Cat_A_premium": 44839, "Cat_A_quota": 3634, "Cat_A_bids": 4551, "Cat_A_ratio": 1.25, "Cat_B_premium": 52356, "Cat_B_quota": 2579, "Cat_B_bids": 3661, "Cat_B_ratio": 1.42, "Cat_C_premium": 42402, "Cat_C_quota": 899, "Cat_C_bids": 1578, "Cat_C_ratio": 1.76, "Cat_D_premium": 4606, "Cat_D_quota": 1179, "Cat_D_bids": 1948, "Cat_D_ratio": 1.65, "Cat_E_premium": 51376, "Cat_E_quota": 1133, "Cat_E_bids": 1603, "Cat_E_ratio": 1.41, "spread_B_minus_A": 7517, "total_car_quota": 6213}, {"month": "2017-09", "Cat_A_premium": 39452, "Cat_A_quota": 3635, "Cat_A_bids": 5664, "Cat_A_ratio": 1.56, "Cat_B_premium": 49094, "Cat_B_quota": 2578, "Cat_B_bids": 3563, "Cat_B_ratio": 1.38, "Cat_C_premium": 44946, "Cat_C_quota": 906, "Cat_C_bids": 1401, "Cat_C_ratio": 1.55, "Cat_D_premium": 5452, "Cat_D_quota": 1037, "Cat_D_bids": 1598, "Cat_D_ratio": 1.54, "Cat_E_premium": 48508, "Cat_E_quota": 1108, "Cat_E_bids": 1710, "Cat_E_ratio": 1.54, "spread_B_minus_A": 9642, "total_car_quota": 6213}, {"month": "2017-10", "Cat_A_premium": 41689, "Cat_A_quota": 3644, "Cat_A_bids": 5199, "Cat_A_ratio": 1.43, "Cat_B_premium": 49052, "Cat_B_quota": 2570, "Cat_B_bids": 3364, "Cat_B_ratio": 1.31, "Cat_C_premium": 50396, "Cat_C_quota": 937, "Cat_C_bids": 1334, "Cat_C_ratio": 1.42, "Cat_D_premium": 4956, "Cat_D_quota": 963, "Cat_D_bids": 1408, "Cat_D_ratio": 1.46, "Cat_E_premium": 50500, "Cat_E_quota": 1082, "Cat_E_bids": 1678, "Cat_E_ratio": 1.55, "spread_B_minus_A": 7363, "total_car_quota": 6214}, {"month": "2017-11", "Cat_A_premium": 46952, "Cat_A_quota": 3369, "Cat_A_bids": 6151, "Cat_A_ratio": 1.83, "Cat_B_premium": 57402, "Cat_B_quota": 2759, "Cat_B_bids": 4688, "Cat_B_ratio": 1.7, "Cat_C_premium": 57868, "Cat_C_quota": 486, "Cat_C_bids": 731, "Cat_C_ratio": 1.5, "Cat_D_premium": 5747, "Cat_D_quota": 1047, "Cat_D_bids": 1391, "Cat_D_ratio": 1.33, "Cat_E_premium": 57250, "Cat_E_quota": 1040, "Cat_E_bids": 1711, "Cat_E_ratio": 1.65, "spread_B_minus_A": 10450, "total_car_quota": 6128}, {"month": "2017-12", "Cat_A_premium": 40270, "Cat_A_quota": 3367, "Cat_A_bids": 4128, "Cat_A_ratio": 1.23, "Cat_B_premium": 50356, "Cat_B_quota": 2749, "Cat_B_bids": 3439, "Cat_B_ratio": 1.25, "Cat_C_premium": 43556, "Cat_C_quota": 531, "Cat_C_bids": 936, "Cat_C_ratio": 1.76, "Cat_D_premium": 7026, "Cat_D_quota": 1030, "Cat_D_bids": 1534, "Cat_D_ratio": 1.49, "Cat_E_premium": 51172, "Cat_E_quota": 1073, "Cat_E_bids": 1834, "Cat_E_ratio": 1.71, "spread_B_minus_A": 10086, "total_car_quota": 6116}, {"month": "2018-01", "Cat_A_premium": 39145, "Cat_A_quota": 3406, "Cat_A_bids": 4202, "Cat_A_ratio": 1.23, "Cat_B_premium": 43975, "Cat_B_quota": 2755, "Cat_B_bids": 3465, "Cat_B_ratio": 1.26, "Cat_C_premium": 39550, "Cat_C_quota": 506, "Cat_C_bids": 857, "Cat_C_ratio": 1.69, "Cat_D_premium": 7851, "Cat_D_quota": 1090, "Cat_D_bids": 1705, "Cat_D_ratio": 1.56, "Cat_E_premium": 45695, "Cat_E_quota": 1033, "Cat_E_bids": 1740, "Cat_E_ratio": 1.68, "spread_B_minus_A": 4830, "total_car_quota": 6161}, {"month": "2018-02", "Cat_A_premium": 38405, "Cat_A_quota": 3119, "Cat_A_bids": 4462, "Cat_A_ratio": 1.43, "Cat_B_premium": 40661, "Cat_B_quota": 2787, "Cat_B_bids": 3575, "Cat_B_ratio": 1.28, "Cat_C_premium": 37581, "Cat_C_quota": 506, "Cat_C_bids": 975, "Cat_C_ratio": 1.93, "Cat_D_premium": 8059, "Cat_D_quota": 1201, "Cat_D_bids": 2006, "Cat_D_ratio": 1.67, "Cat_E_premium": 39352, "Cat_E_quota": 1152, "Cat_E_bids": 2006, "Cat_E_ratio": 1.74, "spread_B_minus_A": 2256, "total_car_quota": 5906}, {"month": "2018-03", "Cat_A_premium": 38415, "Cat_A_quota": 3139, "Cat_A_bids": 4522, "Cat_A_ratio": 1.44, "Cat_B_premium": 38006, "Cat_B_quota": 2792, "Cat_B_bids": 3370, "Cat_B_ratio": 1.21, "Cat_C_premium": 35502, "Cat_C_quota": 494, "Cat_C_bids": 824, "Cat_C_ratio": 1.67, "Cat_D_premium": 7806, "Cat_D_quota": 1050, "Cat_D_bids": 1688, "Cat_D_ratio": 1.61, "Cat_E_premium": 38500, "Cat_E_quota": 1142, "Cat_E_bids": 1944, "Cat_E_ratio": 1.7, "spread_B_minus_A": -409, "total_car_quota": 5931}, {"month": "2018-04", "Cat_A_premium": 37755, "Cat_A_quota": 3132, "Cat_A_bids": 3915, "Cat_A_ratio": 1.25, "Cat_B_premium": 37468, "Cat_B_quota": 2806, "Cat_B_bids": 3608, "Cat_B_ratio": 1.29, "Cat_C_premium": 34102, "Cat_C_quota": 552, "Cat_C_bids": 961, "Cat_C_ratio": 1.74, "Cat_D_premium": 7114, "Cat_D_quota": 1034, "Cat_D_bids": 1680, "Cat_D_ratio": 1.62, "Cat_E_premium": 38214, "Cat_E_quota": 1185, "Cat_E_bids": 1994, "Cat_E_ratio": 1.68, "spread_B_minus_A": -287, "total_car_quota": 5938}, {"month": "2018-05", "Cat_A_premium": 38471, "Cat_A_quota": 2869, "Cat_A_bids": 3641, "Cat_A_ratio": 1.27, "Cat_B_premium": 38245, "Cat_B_quota": 2563, "Cat_B_bids": 4070, "Cat_B_ratio": 1.59, "Cat_C_premium": 31546, "Cat_C_quota": 693, "Cat_C_bids": 1397, "Cat_C_ratio": 2.02, "Cat_D_premium": 7160, "Cat_D_quota": 1089, "Cat_D_bids": 2069, "Cat_D_ratio": 1.9, "Cat_E_premium": 38650, "Cat_E_quota": 1123, "Cat_E_bids": 1844, "Cat_E_ratio": 1.64, "spread_B_minus_A": -226, "total_car_quota": 5432}, {"month": "2018-06", "Cat_A_premium": 35268, "Cat_A_quota": 2887, "Cat_A_bids": 3514, "Cat_A_ratio": 1.22, "Cat_B_premium": 34950, "Cat_B_quota": 2609, "Cat_B_bids": 3456, "Cat_B_ratio": 1.32, "Cat_C_premium": 30952, "Cat_C_quota": 733, "Cat_C_bids": 1233, "Cat_C_ratio": 1.68, "Cat_D_premium": 6945, "Cat_D_quota": 1099, "Cat_D_bids": 1599, "Cat_D_ratio": 1.45, "Cat_E_premium": 35700, "Cat_E_quota": 1140, "Cat_E_bids": 1795, "Cat_E_ratio": 1.57, "spread_B_minus_A": -318, "total_car_quota": 5496}, {"month": "2018-07", "Cat_A_premium": 28850, "Cat_A_quota": 2878, "Cat_A_bids": 4726, "Cat_A_ratio": 1.64, "Cat_B_premium": 31776, "Cat_B_quota": 2573, "Cat_B_bids": 3556, "Cat_B_ratio": 1.38, "Cat_C_premium": 30990, "Cat_C_quota": 633, "Cat_C_bids": 1073, "Cat_C_ratio": 1.7, "Cat_D_premium": 6352, "Cat_D_quota": 1149, "Cat_D_bids": 1579, "Cat_D_ratio": 1.37, "Cat_E_premium": 31905, "Cat_E_quota": 1149, "Cat_E_bids": 2057, "Cat_E_ratio": 1.79, "spread_B_minus_A": 2926, "total_car_quota": 5451}, {"month": "2018-08", "Cat_A_premium": 32898, "Cat_A_quota": 3367, "Cat_A_bids": 6581, "Cat_A_ratio": 1.95, "Cat_B_premium": 33405, "Cat_B_quota": 2537, "Cat_B_bids": 4163, "Cat_B_ratio": 1.64, "Cat_C_premium": 30146, "Cat_C_quota": 788, "Cat_C_bids": 1184, "Cat_C_ratio": 1.5, "Cat_D_premium": 5202, "Cat_D_quota": 1669, "Cat_D_bids": 2384, "Cat_D_ratio": 1.43, "Cat_E_premium": 32866, "Cat_E_quota": 1063, "Cat_E_bids": 1823, "Cat_E_ratio": 1.71, "spread_B_minus_A": 507, "total_car_quota": 5904}, {"month": "2018-09", "Cat_A_premium": 29104, "Cat_A_quota": 3328, "Cat_A_bids": 4547, "Cat_A_ratio": 1.37, "Cat_B_premium": 31654, "Cat_B_quota": 2552, "Cat_B_bids": 3818, "Cat_B_ratio": 1.5, "Cat_C_premium": 27052, "Cat_C_quota": 928, "Cat_C_bids": 1533, "Cat_C_ratio": 1.65, "Cat_D_premium": 4302, "Cat_D_quota": 1695, "Cat_D_bids": 2311, "Cat_D_ratio": 1.36, "Cat_E_premium": 31900, "Cat_E_quota": 1070, "Cat_E_bids": 1934, "Cat_E_ratio": 1.81, "spread_B_minus_A": 2550, "total_car_quota": 5880}, {"month": "2018-10", "Cat_A_premium": 27006, "Cat_A_quota": 3342, "Cat_A_bids": 3870, "Cat_A_ratio": 1.16, "Cat_B_premium": 31302, "Cat_B_quota": 2544, "Cat_B_bids": 3742, "Cat_B_ratio": 1.47, "Cat_C_premium": 29001, "Cat_C_quota": 692, "Cat_C_bids": 992, "Cat_C_ratio": 1.43, "Cat_D_premium": 4030, "Cat_D_quota": 1646, "Cat_D_bids": 2341, "Cat_D_ratio": 1.42, "Cat_E_premium": 32726, "Cat_E_quota": 1100, "Cat_E_bids": 1845, "Cat_E_ratio": 1.68, "spread_B_minus_A": 4296, "total_car_quota": 5886}, {"month": "2018-11", "Cat_A_premium": 26600, "Cat_A_quota": 3637, "Cat_A_bids": 5080, "Cat_A_ratio": 1.4, "Cat_B_premium": 31702, "Cat_B_quota": 2506, "Cat_B_bids": 3928, "Cat_B_ratio": 1.57, "Cat_C_premium": 28505, "Cat_C_quota": 663, "Cat_C_bids": 1040, "Cat_C_ratio": 1.57, "Cat_D_premium": 2749, "Cat_D_quota": 2224, "Cat_D_bids": 2966, "Cat_D_ratio": 1.33, "Cat_E_premium": 31480, "Cat_E_quota": 1109, "Cat_E_bids": 1792, "Cat_E_ratio": 1.62, "spread_B_minus_A": 5102, "total_car_quota": 6143}, {"month": "2018-12", "Cat_A_premium": 24534, "Cat_A_quota": 3768, "Cat_A_bids": 4906, "Cat_A_ratio": 1.3, "Cat_B_premium": 31001, "Cat_B_quota": 2482, "Cat_B_bids": 3584, "Cat_B_ratio": 1.44, "Cat_C_premium": 27005, "Cat_C_quota": 662, "Cat_C_bids": 992, "Cat_C_ratio": 1.5, "Cat_D_premium": 3594, "Cat_D_quota": 2235, "Cat_D_bids": 2858, "Cat_D_ratio": 1.28, "Cat_E_premium": 31330, "Cat_E_quota": 1097, "Cat_E_bids": 1799, "Cat_E_ratio": 1.64, "spread_B_minus_A": 6467, "total_car_quota": 6250}, {"month": "2019-01", "Cat_A_premium": 26045, "Cat_A_quota": 3633, "Cat_A_bids": 5571, "Cat_A_ratio": 1.53, "Cat_B_premium": 33094, "Cat_B_quota": 2489, "Cat_B_bids": 3937, "Cat_B_ratio": 1.58, "Cat_C_premium": 26616, "Cat_C_quota": 674, "Cat_C_bids": 1009, "Cat_C_ratio": 1.5, "Cat_D_premium": 3250, "Cat_D_quota": 2216, "Cat_D_bids": 2869, "Cat_D_ratio": 1.29, "Cat_E_premium": 33299, "Cat_E_quota": 1086, "Cat_E_bids": 1573, "Cat_E_ratio": 1.45, "spread_B_minus_A": 7049, "total_car_quota": 6122}, {"month": "2019-02", "Cat_A_premium": 25995, "Cat_A_quota": 3312, "Cat_A_bids": 4632, "Cat_A_ratio": 1.4, "Cat_B_premium": 34956, "Cat_B_quota": 2416, "Cat_B_bids": 3930, "Cat_B_ratio": 1.63, "Cat_C_premium": 26646, "Cat_C_quota": 632, "Cat_C_bids": 899, "Cat_C_ratio": 1.42, "Cat_D_premium": 3699, "Cat_D_quota": 1660, "Cat_D_bids": 2264, "Cat_D_ratio": 1.36, "Cat_E_premium": 35988, "Cat_E_quota": 810, "Cat_E_bids": 1203, "Cat_E_ratio": 1.49, "spread_B_minus_A": 8961, "total_car_quota": 5728}, {"month": "2019-03", "Cat_A_premium": 26484, "Cat_A_quota": 3309, "Cat_A_bids": 4417, "Cat_A_ratio": 1.33, "Cat_B_premium": 38181, "Cat_B_quota": 2434, "Cat_B_bids": 3781, "Cat_B_ratio": 1.55, "Cat_C_premium": 27016, "Cat_C_quota": 610, "Cat_C_bids": 854, "Cat_C_ratio": 1.4, "Cat_D_premium": 3536, "Cat_D_quota": 1659, "Cat_D_bids": 2214, "Cat_D_ratio": 1.33, "Cat_E_premium": 39310, "Cat_E_quota": 805, "Cat_E_bids": 1419, "Cat_E_ratio": 1.76, "spread_B_minus_A": 11697, "total_car_quota": 5743}, {"month": "2019-04", "Cat_A_premium": 31179, "Cat_A_quota": 3309, "Cat_A_bids": 4587, "Cat_A_ratio": 1.39, "Cat_B_premium": 45551, "Cat_B_quota": 2407, "Cat_B_bids": 3416, "Cat_B_ratio": 1.42, "Cat_C_premium": 29795, "Cat_C_quota": 613, "Cat_C_bids": 991, "Cat_C_ratio": 1.62, "Cat_D_premium": 3476, "Cat_D_quota": 1664, "Cat_D_bids": 2322, "Cat_D_ratio": 1.4, "Cat_E_premium": 50310, "Cat_E_quota": 798, "Cat_E_bids": 1315, "Cat_E_ratio": 1.65, "spread_B_minus_A": 14372, "total_car_quota": 5716}, {"month": "2019-05", "Cat_A_premium": 31852, "Cat_A_quota": 2906, "Cat_A_bids": 3787, "Cat_A_ratio": 1.3, "Cat_B_premium": 45287, "Cat_B_quota": 2302, "Cat_B_bids": 2767, "Cat_B_ratio": 1.2, "Cat_C_premium": 27980, "Cat_C_quota": 803, "Cat_C_bids": 1210, "Cat_C_ratio": 1.51, "Cat_D_premium": 3277, "Cat_D_quota": 1821, "Cat_D_bids": 2347, "Cat_D_ratio": 1.29, "Cat_E_premium": 49751, "Cat_E_quota": 766, "Cat_E_bids": 1139, "Cat_E_ratio": 1.49, "spread_B_minus_A": 13435, "total_car_quota": 5208}, {"month": "2019-06", "Cat_A_premium": 28504, "Cat_A_quota": 2848, "Cat_A_bids": 3644, "Cat_A_ratio": 1.28, "Cat_B_premium": 37817, "Cat_B_quota": 2280, "Cat_B_bids": 2764, "Cat_B_ratio": 1.21, "Cat_C_premium": 25502, "Cat_C_quota": 782, "Cat_C_bids": 1142, "Cat_C_ratio": 1.46, "Cat_D_premium": 3045, "Cat_D_quota": 1834, "Cat_D_bids": 2336, "Cat_D_ratio": 1.27, "Cat_E_premium": 40701, "Cat_E_quota": 761, "Cat_E_bids": 1260, "Cat_E_ratio": 1.66, "spread_B_minus_A": 9313, "total_car_quota": 5128}, {"month": "2019-07", "Cat_A_premium": 27628, "Cat_A_quota": 3054, "Cat_A_bids": 3697, "Cat_A_ratio": 1.21, "Cat_B_premium": 36703, "Cat_B_quota": 2284, "Cat_B_bids": 3067, "Cat_B_ratio": 1.34, "Cat_C_premium": 24844, "Cat_C_quota": 783, "Cat_C_bids": 1306, "Cat_C_ratio": 1.67, "Cat_D_premium": 3318, "Cat_D_quota": 1802, "Cat_D_bids": 2334, "Cat_D_ratio": 1.3, "Cat_E_premium": 38395, "Cat_E_quota": 754, "Cat_E_bids": 1274, "Cat_E_ratio": 1.69, "spread_B_minus_A": 9075, "total_car_quota": 5338}, {"month": "2019-08", "Cat_A_premium": 32321, "Cat_A_quota": 2121, "Cat_A_bids": 3748, "Cat_A_ratio": 1.77, "Cat_B_premium": 39302, "Cat_B_quota": 2092, "Cat_B_bids": 2902, "Cat_B_ratio": 1.39, "Cat_C_premium": 27150, "Cat_C_quota": 575, "Cat_C_bids": 938, "Cat_C_ratio": 1.63, "Cat_D_premium": 4350, "Cat_D_quota": 1493, "Cat_D_bids": 2050, "Cat_D_ratio": 1.37, "Cat_E_premium": 40257, "Cat_E_quota": 720, "Cat_E_bids": 1182, "Cat_E_ratio": 1.64, "spread_B_minus_A": 6981, "total_car_quota": 4213}, {"month": "2019-09", "Cat_A_premium": 31771, "Cat_A_quota": 2112, "Cat_A_bids": 3109, "Cat_A_ratio": 1.47, "Cat_B_premium": 36500, "Cat_B_quota": 2090, "Cat_B_bids": 2707, "Cat_B_ratio": 1.3, "Cat_C_premium": 25529, "Cat_C_quota": 585, "Cat_C_bids": 990, "Cat_C_ratio": 1.69, "Cat_D_premium": 3845, "Cat_D_quota": 1646, "Cat_D_bids": 2283, "Cat_D_ratio": 1.39, "Cat_E_premium": 38956, "Cat_E_quota": 724, "Cat_E_bids": 1184, "Cat_E_ratio": 1.64, "spread_B_minus_A": 4729, "total_car_quota": 4202}, {"month": "2019-10", "Cat_A_premium": 33155, "Cat_A_quota": 2117, "Cat_A_bids": 3126, "Cat_A_ratio": 1.48, "Cat_B_premium": 41583, "Cat_B_quota": 2092, "Cat_B_bids": 3062, "Cat_B_ratio": 1.46, "Cat_C_premium": 26255, "Cat_C_quota": 570, "Cat_C_bids": 961, "Cat_C_ratio": 1.69, "Cat_D_premium": 3844, "Cat_D_quota": 1518, "Cat_D_bids": 2025, "Cat_D_ratio": 1.33, "Cat_E_premium": 41510, "Cat_E_quota": 733, "Cat_E_bids": 1107, "Cat_E_ratio": 1.51, "spread_B_minus_A": 8428, "total_car_quota": 4209}, {"month": "2019-11", "Cat_A_premium": 31000, "Cat_A_quota": 2066, "Cat_A_bids": 2770, "Cat_A_ratio": 1.34, "Cat_B_premium": 39854, "Cat_B_quota": 2036, "Cat_B_bids": 2627, "Cat_B_ratio": 1.29, "Cat_C_premium": 24947, "Cat_C_quota": 640, "Cat_C_bids": 935, "Cat_C_ratio": 1.46, "Cat_D_premium": 4010, "Cat_D_quota": 1391, "Cat_D_bids": 1805, "Cat_D_ratio": 1.3, "Cat_E_premium": 40495, "Cat_E_quota": 773, "Cat_E_bids": 1127, "Cat_E_ratio": 1.46, "spread_B_minus_A": 8854, "total_car_quota": 4102}, {"month": "2019-12", "Cat_A_premium": 32949, "Cat_A_quota": 2059, "Cat_A_bids": 2642, "Cat_A_ratio": 1.28, "Cat_B_premium": 36950, "Cat_B_quota": 2028, "Cat_B_bids": 2516, "Cat_B_ratio": 1.24, "Cat_C_premium": 23452, "Cat_C_quota": 636, "Cat_C_bids": 843, "Cat_C_ratio": 1.33, "Cat_D_premium": 3724, "Cat_D_quota": 1390, "Cat_D_bids": 1758, "Cat_D_ratio": 1.26, "Cat_E_premium": 38439, "Cat_E_quota": 768, "Cat_E_bids": 1014, "Cat_E_ratio": 1.32, "spread_B_minus_A": 4001, "total_car_quota": 4087}, {"month": "2020-01", "Cat_A_premium": 35165, "Cat_A_quota": 2069, "Cat_A_bids": 2840, "Cat_A_ratio": 1.37, "Cat_B_premium": 37407, "Cat_B_quota": 2034, "Cat_B_bids": 2386, "Cat_B_ratio": 1.17, "Cat_C_premium": 24702, "Cat_C_quota": 650, "Cat_C_bids": 961, "Cat_C_ratio": 1.48, "Cat_D_premium": 4300, "Cat_D_quota": 1400, "Cat_D_bids": 2020, "Cat_D_ratio": 1.44, "Cat_E_premium": 37750, "Cat_E_quota": 772, "Cat_E_bids": 1069, "Cat_E_ratio": 1.38, "spread_B_minus_A": 2242, "total_car_quota": 4103}, {"month": "2020-02", "Cat_A_premium": 31504, "Cat_A_quota": 1964, "Cat_A_bids": 2768, "Cat_A_ratio": 1.41, "Cat_B_premium": 31890, "Cat_B_quota": 1971, "Cat_B_bids": 2632, "Cat_B_ratio": 1.34, "Cat_C_premium": 25007, "Cat_C_quota": 666, "Cat_C_bids": 1065, "Cat_C_ratio": 1.6, "Cat_D_premium": 4355, "Cat_D_quota": 1155, "Cat_D_bids": 1550, "Cat_D_ratio": 1.34, "Cat_E_premium": 34100, "Cat_E_quota": 663, "Cat_E_bids": 1075, "Cat_E_ratio": 1.62, "spread_B_minus_A": 386, "total_car_quota": 3935}, {"month": "2020-03", "Cat_A_premium": 31954, "Cat_A_quota": 1960, "Cat_A_bids": 2857, "Cat_A_ratio": 1.46, "Cat_B_premium": 31406, "Cat_B_quota": 1979, "Cat_B_bids": 2713, "Cat_B_ratio": 1.37, "Cat_C_premium": 23102, "Cat_C_quota": 763, "Cat_C_bids": 1212, "Cat_C_ratio": 1.59, "Cat_D_premium": 4400, "Cat_D_quota": 1174, "Cat_D_bids": 1542, "Cat_D_ratio": 1.31, "Cat_E_premium": 32500, "Cat_E_quota": 664, "Cat_E_bids": 1015, "Cat_E_ratio": 1.53, "spread_B_minus_A": -548, "total_car_quota": 3939}, {"month": "2020-07", "Cat_A_premium": 33110, "Cat_A_quota": 2593, "Cat_A_bids": 5546, "Cat_A_ratio": 2.14, "Cat_B_premium": 35445, "Cat_B_quota": 2630, "Cat_B_bids": 5657, "Cat_B_ratio": 2.15, "Cat_C_premium": 24195, "Cat_C_quota": 978, "Cat_C_bids": 1625, "Cat_C_ratio": 1.66, "Cat_D_premium": 7106, "Cat_D_quota": 1738, "Cat_D_bids": 2966, "Cat_D_ratio": 1.71, "Cat_E_premium": 34995, "Cat_E_quota": 892, "Cat_E_bids": 1651, "Cat_E_ratio": 1.85, "spread_B_minus_A": 2335, "total_car_quota": 5223}, {"month": "2020-08", "Cat_A_premium": 34355, "Cat_A_quota": 2056, "Cat_A_bids": 4146, "Cat_A_ratio": 2.02, "Cat_B_premium": 37952, "Cat_B_quota": 1855, "Cat_B_bids": 3712, "Cat_B_ratio": 2.0, "Cat_C_premium": 24553, "Cat_C_quota": 715, "Cat_C_bids": 1244, "Cat_C_ratio": 1.74, "Cat_D_premium": 7566, "Cat_D_quota": 998, "Cat_D_bids": 1517, "Cat_D_ratio": 1.52, "Cat_E_premium": 37306, "Cat_E_quota": 946, "Cat_E_bids": 1548, "Cat_E_ratio": 1.64, "spread_B_minus_A": 3597, "total_car_quota": 3911}, {"month": "2020-09", "Cat_A_premium": 38135, "Cat_A_quota": 2069, "Cat_A_bids": 3277, "Cat_A_ratio": 1.58, "Cat_B_premium": 41250, "Cat_B_quota": 1816, "Cat_B_bids": 3212, "Cat_B_ratio": 1.77, "Cat_C_premium": 27616, "Cat_C_quota": 705, "Cat_C_bids": 1116, "Cat_C_ratio": 1.58, "Cat_D_premium": 7365, "Cat_D_quota": 990, "Cat_D_bids": 1333, "Cat_D_ratio": 1.35, "Cat_E_premium": 40896, "Cat_E_quota": 941, "Cat_E_bids": 1343, "Cat_E_ratio": 1.43, "spread_B_minus_A": 3115, "total_car_quota": 3885}, {"month": "2020-10", "Cat_A_premium": 36934, "Cat_A_quota": 1828, "Cat_A_bids": 2595, "Cat_A_ratio": 1.42, "Cat_B_premium": 40840, "Cat_B_quota": 1598, "Cat_B_bids": 2490, "Cat_B_ratio": 1.56, "Cat_C_premium": 33434, "Cat_C_quota": 632, "Cat_C_bids": 1125, "Cat_C_ratio": 1.78, "Cat_D_premium": 7376, "Cat_D_quota": 852, "Cat_D_bids": 1237, "Cat_D_ratio": 1.45, "Cat_E_premium": 40095, "Cat_E_quota": 857, "Cat_E_bids": 1360, "Cat_E_ratio": 1.59, "spread_B_minus_A": 3906, "total_car_quota": 3426}, {"month": "2020-11", "Cat_A_premium": 36840, "Cat_A_quota": 1939, "Cat_A_bids": 2623, "Cat_A_ratio": 1.35, "Cat_B_premium": 40050, "Cat_B_quota": 2020, "Cat_B_bids": 2974, "Cat_B_ratio": 1.47, "Cat_C_premium": 30918, "Cat_C_quota": 739, "Cat_C_bids": 1155, "Cat_C_ratio": 1.56, "Cat_D_premium": 7276, "Cat_D_quota": 1070, "Cat_D_bids": 1406, "Cat_D_ratio": 1.31, "Cat_E_premium": 40502, "Cat_E_quota": 984, "Cat_E_bids": 1486, "Cat_E_ratio": 1.51, "spread_B_minus_A": 3210, "total_car_quota": 3959}, {"month": "2020-12", "Cat_A_premium": 40635, "Cat_A_quota": 1947, "Cat_A_bids": 3023, "Cat_A_ratio": 1.55, "Cat_B_premium": 47156, "Cat_B_quota": 2044, "Cat_B_bids": 3343, "Cat_B_ratio": 1.64, "Cat_C_premium": 34045, "Cat_C_quota": 737, "Cat_C_bids": 1239, "Cat_C_ratio": 1.68, "Cat_D_premium": 7680, "Cat_D_quota": 1056, "Cat_D_bids": 1477, "Cat_D_ratio": 1.4, "Cat_E_premium": 47505, "Cat_E_quota": 935, "Cat_E_bids": 1410, "Cat_E_ratio": 1.51, "spread_B_minus_A": 6521, "total_car_quota": 3991}, {"month": "2021-01", "Cat_A_premium": 42055, "Cat_A_quota": 1929, "Cat_A_bids": 2589, "Cat_A_ratio": 1.34, "Cat_B_premium": 49550, "Cat_B_quota": 2041, "Cat_B_bids": 2734, "Cat_B_ratio": 1.34, "Cat_C_premium": 38450, "Cat_C_quota": 753, "Cat_C_bids": 1350, "Cat_C_ratio": 1.79, "Cat_D_premium": 7545, "Cat_D_quota": 1077, "Cat_D_bids": 1398, "Cat_D_ratio": 1.3, "Cat_E_premium": 50694, "Cat_E_quota": 933, "Cat_E_bids": 1463, "Cat_E_ratio": 1.57, "spread_B_minus_A": 7495, "total_car_quota": 3970}, {"month": "2021-02", "Cat_A_premium": 41500, "Cat_A_quota": 1788, "Cat_A_bids": 2324, "Cat_A_ratio": 1.3, "Cat_B_premium": 46396, "Cat_B_quota": 1885, "Cat_B_bids": 2275, "Cat_B_ratio": 1.21, "Cat_C_premium": 42946, "Cat_C_quota": 535, "Cat_C_bids": 934, "Cat_C_ratio": 1.75, "Cat_D_premium": 7503, "Cat_D_quota": 1126, "Cat_D_bids": 1420, "Cat_D_ratio": 1.26, "Cat_E_premium": 48642, "Cat_E_quota": 604, "Cat_E_bids": 938, "Cat_E_ratio": 1.55, "spread_B_minus_A": 4896, "total_car_quota": 3673}, {"month": "2021-03", "Cat_A_premium": 43292, "Cat_A_quota": 1773, "Cat_A_bids": 2361, "Cat_A_ratio": 1.33, "Cat_B_premium": 46001, "Cat_B_quota": 1888, "Cat_B_bids": 2343, "Cat_B_ratio": 1.24, "Cat_C_premium": 38551, "Cat_C_quota": 547, "Cat_C_bids": 987, "Cat_C_ratio": 1.8, "Cat_D_premium": 7772, "Cat_D_quota": 1084, "Cat_D_bids": 1407, "Cat_D_ratio": 1.3, "Cat_E_premium": 47404, "Cat_E_quota": 594, "Cat_E_bids": 880, "Cat_E_ratio": 1.48, "spread_B_minus_A": 2709, "total_car_quota": 3661}, {"month": "2021-04", "Cat_A_premium": 47620, "Cat_A_quota": 1773, "Cat_A_bids": 2502, "Cat_A_ratio": 1.41, "Cat_B_premium": 56750, "Cat_B_quota": 1914, "Cat_B_bids": 3109, "Cat_B_ratio": 1.62, "Cat_C_premium": 40068, "Cat_C_quota": 525, "Cat_C_bids": 929, "Cat_C_ratio": 1.77, "Cat_D_premium": 8000, "Cat_D_quota": 1106, "Cat_D_bids": 1469, "Cat_D_ratio": 1.33, "Cat_E_premium": 57150, "Cat_E_quota": 599, "Cat_E_bids": 1268, "Cat_E_ratio": 2.12, "spread_B_minus_A": 9130, "total_car_quota": 3687}, {"month": "2021-05", "Cat_A_premium": 44902, "Cat_A_quota": 1667, "Cat_A_bids": 2309, "Cat_A_ratio": 1.39, "Cat_B_premium": 59045, "Cat_B_quota": 1636, "Cat_B_bids": 2333, "Cat_B_ratio": 1.43, "Cat_C_premium": 42351, "Cat_C_quota": 321, "Cat_C_bids": 576, "Cat_C_ratio": 1.79, "Cat_D_premium": 8356, "Cat_D_quota": 1278, "Cat_D_bids": 1805, "Cat_D_ratio": 1.41, "Cat_E_premium": 62501, "Cat_E_quota": 534, "Cat_E_bids": 787, "Cat_E_ratio": 1.47, "spread_B_minus_A": 14143, "total_car_quota": 3303}, {"month": "2021-06", "Cat_A_premium": 48166, "Cat_A_quota": 1688, "Cat_A_bids": 2617, "Cat_A_ratio": 1.55, "Cat_B_premium": 58070, "Cat_B_quota": 1624, "Cat_B_bids": 2090, "Cat_B_ratio": 1.29, "Cat_C_premium": 37001, "Cat_C_quota": 433, "Cat_C_bids": 891, "Cat_C_ratio": 2.06, "Cat_D_premium": 8602, "Cat_D_quota": 1244, "Cat_D_bids": 1640, "Cat_D_ratio": 1.32, "Cat_E_premium": 59556, "Cat_E_quota": 524, "Cat_E_bids": 850, "Cat_E_ratio": 1.62, "spread_B_minus_A": 9904, "total_car_quota": 3312}, {"month": "2021-07", "Cat_A_premium": 46006, "Cat_A_quota": 1703, "Cat_A_bids": 2389, "Cat_A_ratio": 1.4, "Cat_B_premium": 57800, "Cat_B_quota": 1659, "Cat_B_bids": 2194, "Cat_B_ratio": 1.32, "Cat_C_premium": 39212, "Cat_C_quota": 328, "Cat_C_bids": 677, "Cat_C_ratio": 2.06, "Cat_D_premium": 8596, "Cat_D_quota": 1271, "Cat_D_bids": 1623, "Cat_D_ratio": 1.28, "Cat_E_premium": 58850, "Cat_E_quota": 526, "Cat_E_bids": 824, "Cat_E_ratio": 1.57, "spread_B_minus_A": 11794, "total_car_quota": 3362}, {"month": "2021-08", "Cat_A_premium": 45939, "Cat_A_quota": 1611, "Cat_A_bids": 2148, "Cat_A_ratio": 1.33, "Cat_B_premium": 58501, "Cat_B_quota": 1565, "Cat_B_bids": 2045, "Cat_B_ratio": 1.31, "Cat_C_premium": 41300, "Cat_C_quota": 236, "Cat_C_bids": 453, "Cat_C_ratio": 1.92, "Cat_D_premium": 9200, "Cat_D_quota": 900, "Cat_D_bids": 1302, "Cat_D_ratio": 1.45, "Cat_E_premium": 62250, "Cat_E_quota": 397, "Cat_E_bids": 696, "Cat_E_ratio": 1.75, "spread_B_minus_A": 12562, "total_car_quota": 3176}, {"month": "2021-09", "Cat_A_premium": 47500, "Cat_A_quota": 1607, "Cat_A_bids": 2164, "Cat_A_ratio": 1.35, "Cat_B_premium": 65455, "Cat_B_quota": 1563, "Cat_B_bids": 2269, "Cat_B_ratio": 1.45, "Cat_C_premium": 39500, "Cat_C_quota": 242, "Cat_C_bids": 414, "Cat_C_ratio": 1.71, "Cat_D_premium": 9389, "Cat_D_quota": 894, "Cat_D_bids": 1220, "Cat_D_ratio": 1.36, "Cat_E_premium": 67351, "Cat_E_quota": 404, "Cat_E_bids": 719, "Cat_E_ratio": 1.78, "spread_B_minus_A": 17955, "total_car_quota": 3170}, {"month": "2021-10", "Cat_A_premium": 49855, "Cat_A_quota": 1627, "Cat_A_bids": 2381, "Cat_A_ratio": 1.46, "Cat_B_premium": 75205, "Cat_B_quota": 1548, "Cat_B_bids": 2370, "Cat_B_ratio": 1.53, "Cat_C_premium": 39696, "Cat_C_quota": 251, "Cat_C_bids": 485, "Cat_C_ratio": 1.93, "Cat_D_premium": 9181, "Cat_D_quota": 894, "Cat_D_bids": 1230, "Cat_D_ratio": 1.38, "Cat_E_premium": 78878, "Cat_E_quota": 424, "Cat_E_bids": 833, "Cat_E_ratio": 1.96, "spread_B_minus_A": 25350, "total_car_quota": 3175}, {"month": "2021-11", "Cat_A_premium": 54355, "Cat_A_quota": 1073, "Cat_A_bids": 1540, "Cat_A_ratio": 1.44, "Cat_B_premium": 81201, "Cat_B_quota": 1181, "Cat_B_bids": 1636, "Cat_B_ratio": 1.39, "Cat_C_premium": 42752, "Cat_C_quota": 183, "Cat_C_bids": 337, "Cat_C_ratio": 1.84, "Cat_D_premium": 9381, "Cat_D_quota": 829, "Cat_D_bids": 1100, "Cat_D_ratio": 1.33, "Cat_E_premium": 87000, "Cat_E_quota": 323, "Cat_E_bids": 510, "Cat_E_ratio": 1.58, "spread_B_minus_A": 26846, "total_car_quota": 2254}, {"month": "2021-12", "Cat_A_premium": 57906, "Cat_A_quota": 1070, "Cat_A_bids": 1511, "Cat_A_ratio": 1.41, "Cat_B_premium": 80695, "Cat_B_quota": 1188, "Cat_B_bids": 1651, "Cat_B_ratio": 1.39, "Cat_C_premium": 44500, "Cat_C_quota": 183, "Cat_C_bids": 297, "Cat_C_ratio": 1.62, "Cat_D_premium": 9501, "Cat_D_quota": 846, "Cat_D_bids": 1146, "Cat_D_ratio": 1.35, "Cat_E_premium": 84444, "Cat_E_quota": 326, "Cat_E_bids": 486, "Cat_E_ratio": 1.49, "spread_B_minus_A": 22789, "total_car_quota": 2258}, {"month": "2022-01", "Cat_A_premium": 57748, "Cat_A_quota": 1074, "Cat_A_bids": 1471, "Cat_A_ratio": 1.37, "Cat_B_premium": 79850, "Cat_B_quota": 1179, "Cat_B_bids": 1619, "Cat_B_ratio": 1.37, "Cat_C_premium": 42600, "Cat_C_quota": 181, "Cat_C_bids": 347, "Cat_C_ratio": 1.92, "Cat_D_premium": 9844, "Cat_D_quota": 847, "Cat_D_bids": 1093, "Cat_D_ratio": 1.29, "Cat_E_premium": 83206, "Cat_E_quota": 294, "Cat_E_bids": 419, "Cat_E_ratio": 1.43, "spread_B_minus_A": 22102, "total_car_quota": 2253}, {"month": "2022-02", "Cat_A_premium": 61880, "Cat_A_quota": 1078, "Cat_A_bids": 1695, "Cat_A_ratio": 1.57, "Cat_B_premium": 89846, "Cat_B_quota": 1109, "Cat_B_bids": 1804, "Cat_B_ratio": 1.63, "Cat_C_premium": 45251, "Cat_C_quota": 156, "Cat_C_bids": 343, "Cat_C_ratio": 2.2, "Cat_D_premium": 10300, "Cat_D_quota": 826, "Cat_D_bids": 1076, "Cat_D_ratio": 1.3, "Cat_E_premium": 90051, "Cat_E_quota": 360, "Cat_E_bids": 569, "Cat_E_ratio": 1.58, "spread_B_minus_A": 27966, "total_car_quota": 2187}, {"month": "2022-03", "Cat_A_premium": 70028, "Cat_A_quota": 1074, "Cat_A_bids": 1811, "Cat_A_ratio": 1.69, "Cat_B_premium": 96889, "Cat_B_quota": 1106, "Cat_B_bids": 1684, "Cat_B_ratio": 1.52, "Cat_C_premium": 50196, "Cat_C_quota": 167, "Cat_C_bids": 365, "Cat_C_ratio": 2.19, "Cat_D_premium": 10950, "Cat_D_quota": 814, "Cat_D_bids": 1177, "Cat_D_ratio": 1.45, "Cat_E_premium": 98950, "Cat_E_quota": 370, "Cat_E_bids": 662, "Cat_E_ratio": 1.79, "spread_B_minus_A": 26861, "total_car_quota": 2180}, {"month": "2022-04", "Cat_A_premium": 70848, "Cat_A_quota": 1068, "Cat_A_bids": 1467, "Cat_A_ratio": 1.37, "Cat_B_premium": 94196, "Cat_B_quota": 1110, "Cat_B_bids": 1395, "Cat_B_ratio": 1.26, "Cat_C_premium": 53452, "Cat_C_quota": 161, "Cat_C_bids": 391, "Cat_C_ratio": 2.43, "Cat_D_premium": 10152, "Cat_D_quota": 811, "Cat_D_bids": 1100, "Cat_D_ratio": 1.36, "Cat_E_premium": 97900, "Cat_E_quota": 364, "Cat_E_bids": 585, "Cat_E_ratio": 1.61, "spread_B_minus_A": 23348, "total_car_quota": 2178}, {"month": "2022-05", "Cat_A_premium": 69451, "Cat_A_quota": 1237, "Cat_A_bids": 1623, "Cat_A_ratio": 1.31, "Cat_B_premium": 93990, "Cat_B_quota": 1055, "Cat_B_bids": 1408, "Cat_B_ratio": 1.33, "Cat_C_premium": 51196, "Cat_C_quota": 207, "Cat_C_bids": 404, "Cat_C_ratio": 1.95, "Cat_D_premium": 9490, "Cat_D_quota": 1172, "Cat_D_bids": 1672, "Cat_D_ratio": 1.43, "Cat_E_premium": 93506, "Cat_E_quota": 386, "Cat_E_bids": 592, "Cat_E_ratio": 1.53, "spread_B_minus_A": 24539, "total_car_quota": 2292}, {"month": "2022-06", "Cat_A_premium": 74395, "Cat_A_quota": 1226, "Cat_A_bids": 1724, "Cat_A_ratio": 1.41, "Cat_B_premium": 103342, "Cat_B_quota": 1059, "Cat_B_bids": 1673, "Cat_B_ratio": 1.58, "Cat_C_premium": 53006, "Cat_C_quota": 210, "Cat_C_bids": 427, "Cat_C_ratio": 2.03, "Cat_D_premium": 10151, "Cat_D_quota": 1133, "Cat_D_bids": 1576, "Cat_D_ratio": 1.39, "Cat_E_premium": 102548, "Cat_E_quota": 384, "Cat_E_bids": 592, "Cat_E_ratio": 1.54, "spread_B_minus_A": 28947, "total_car_quota": 2285}, {"month": "2022-07", "Cat_A_premium": 78450, "Cat_A_quota": 1245, "Cat_A_bids": 1734, "Cat_A_ratio": 1.39, "Cat_B_premium": 108902, "Cat_B_quota": 1054, "Cat_B_bids": 1397, "Cat_B_ratio": 1.33, "Cat_C_premium": 54445, "Cat_C_quota": 204, "Cat_C_bids": 334, "Cat_C_ratio": 1.64, "Cat_D_premium": 10900, "Cat_D_quota": 1143, "Cat_D_bids": 1491, "Cat_D_ratio": 1.3, "Cat_E_premium": 112262, "Cat_E_quota": 389, "Cat_E_bids": 657, "Cat_E_ratio": 1.69, "spread_B_minus_A": 30452, "total_car_quota": 2299}, {"month": "2022-08", "Cat_A_premium": 83944, "Cat_A_quota": 1105, "Cat_A_bids": 1524, "Cat_A_ratio": 1.38, "Cat_B_premium": 109501, "Cat_B_quota": 945, "Cat_B_bids": 1277, "Cat_B_ratio": 1.35, "Cat_C_premium": 57590, "Cat_C_quota": 182, "Cat_C_bids": 364, "Cat_C_ratio": 2.0, "Cat_D_premium": 11050, "Cat_D_quota": 1083, "Cat_D_bids": 1369, "Cat_D_ratio": 1.26, "Cat_E_premium": 112500, "Cat_E_quota": 330, "Cat_E_bids": 566, "Cat_E_ratio": 1.72, "spread_B_minus_A": 25557, "total_car_quota": 2050}, {"month": "2022-09", "Cat_A_premium": 85000, "Cat_A_quota": 1099, "Cat_A_bids": 1482, "Cat_A_ratio": 1.35, "Cat_B_premium": 110526, "Cat_B_quota": 941, "Cat_B_bids": 1180, "Cat_B_ratio": 1.25, "Cat_C_premium": 65995, "Cat_C_quota": 168, "Cat_C_bids": 336, "Cat_C_ratio": 2.0, "Cat_D_premium": 11445, "Cat_D_quota": 1027, "Cat_D_bids": 1246, "Cat_D_ratio": 1.21, "Cat_E_premium": 110250, "Cat_E_quota": 341, "Cat_E_bids": 557, "Cat_E_ratio": 1.63, "spread_B_minus_A": 25526, "total_car_quota": 2040}, {"month": "2022-10", "Cat_A_premium": 80795, "Cat_A_quota": 1123, "Cat_A_bids": 1438, "Cat_A_ratio": 1.28, "Cat_B_premium": 102928, "Cat_B_quota": 944, "Cat_B_bids": 1483, "Cat_B_ratio": 1.57, "Cat_C_premium": 68096, "Cat_C_quota": 175, "Cat_C_bids": 445, "Cat_C_ratio": 2.54, "Cat_D_premium": 12276, "Cat_D_quota": 1021, "Cat_D_bids": 1256, "Cat_D_ratio": 1.23, "Cat_E_premium": 106502, "Cat_E_quota": 343, "Cat_E_bids": 517, "Cat_E_ratio": 1.51, "spread_B_minus_A": 22133, "total_car_quota": 2067}, {"month": "2022-11", "Cat_A_premium": 88912, "Cat_A_quota": 919, "Cat_A_bids": 1309, "Cat_A_ratio": 1.42, "Cat_B_premium": 114634, "Cat_B_quota": 827, "Cat_B_bids": 1208, "Cat_B_ratio": 1.46, "Cat_C_premium": 79052, "Cat_C_quota": 143, "Cat_C_bids": 269, "Cat_C_ratio": 1.88, "Cat_D_premium": 12889, "Cat_D_quota": 886, "Cat_D_bids": 1131, "Cat_D_ratio": 1.28, "Cat_E_premium": 115293, "Cat_E_quota": 296, "Cat_E_bids": 525, "Cat_E_ratio": 1.77, "spread_B_minus_A": 25722, "total_car_quota": 1746}, {"month": "2022-12", "Cat_A_premium": 88255, "Cat_A_quota": 931, "Cat_A_bids": 1234, "Cat_A_ratio": 1.33, "Cat_B_premium": 106754, "Cat_B_quota": 836, "Cat_B_bids": 1132, "Cat_B_ratio": 1.35, "Cat_C_premium": 79850, "Cat_C_quota": 138, "Cat_C_bids": 265, "Cat_C_ratio": 1.92, "Cat_D_premium": 11895, "Cat_D_quota": 906, "Cat_D_bids": 1191, "Cat_D_ratio": 1.31, "Cat_E_premium": 110062, "Cat_E_quota": 295, "Cat_E_bids": 539, "Cat_E_ratio": 1.83, "spread_B_minus_A": 18499, "total_car_quota": 1767}, {"month": "2023-01", "Cat_A_premium": 83000, "Cat_A_quota": 921, "Cat_A_bids": 1276, "Cat_A_ratio": 1.39, "Cat_B_premium": 103730, "Cat_B_quota": 818, "Cat_B_bids": 1001, "Cat_B_ratio": 1.22, "Cat_C_premium": 77205, "Cat_C_quota": 148, "Cat_C_bids": 365, "Cat_C_ratio": 2.47, "Cat_D_premium": 10996, "Cat_D_quota": 890, "Cat_D_bids": 1250, "Cat_D_ratio": 1.4, "Cat_E_premium": 107444, "Cat_E_quota": 295, "Cat_E_bids": 533, "Cat_E_ratio": 1.81, "spread_B_minus_A": 20730, "total_car_quota": 1739}, {"month": "2023-02", "Cat_A_premium": 86278, "Cat_A_quota": 1017, "Cat_A_bids": 1365, "Cat_A_ratio": 1.34, "Cat_B_premium": 110262, "Cat_B_quota": 866, "Cat_B_bids": 1348, "Cat_B_ratio": 1.56, "Cat_C_premium": 86454, "Cat_C_quota": 91, "Cat_C_bids": 244, "Cat_C_ratio": 2.68, "Cat_D_premium": 11896, "Cat_D_quota": 956, "Cat_D_bids": 1205, "Cat_D_ratio": 1.26, "Cat_E_premium": 111502, "Cat_E_quota": 261, "Cat_E_bids": 503, "Cat_E_ratio": 1.93, "spread_B_minus_A": 23984, "total_car_quota": 1883}, {"month": "2023-03", "Cat_A_premium": 90752, "Cat_A_quota": 1027, "Cat_A_bids": 1433, "Cat_A_ratio": 1.4, "Cat_B_premium": 115851, "Cat_B_quota": 897, "Cat_B_bids": 1299, "Cat_B_ratio": 1.45, "Cat_C_premium": 88245, "Cat_C_quota": 93, "Cat_C_bids": 172, "Cat_C_ratio": 1.85, "Cat_D_premium": 12196, "Cat_D_quota": 957, "Cat_D_bids": 1182, "Cat_D_ratio": 1.24, "Cat_E_premium": 116010, "Cat_E_quota": 264, "Cat_E_bids": 519, "Cat_E_ratio": 1.97, "spread_B_minus_A": 25099, "total_car_quota": 1924}, {"month": "2023-04", "Cat_A_premium": 100111, "Cat_A_quota": 1022, "Cat_A_bids": 1499, "Cat_A_ratio": 1.47, "Cat_B_premium": 119695, "Cat_B_quota": 860, "Cat_B_bids": 1119, "Cat_B_ratio": 1.3, "Cat_C_premium": 76068, "Cat_C_quota": 98, "Cat_C_bids": 219, "Cat_C_ratio": 2.23, "Cat_D_premium": 12090, "Cat_D_quota": 931, "Cat_D_bids": 1039, "Cat_D_ratio": 1.12, "Cat_E_premium": 121746, "Cat_E_quota": 271, "Cat_E_bids": 504, "Cat_E_ratio": 1.86, "spread_B_minus_A": 19584, "total_car_quota": 1882}, {"month": "2023-05", "Cat_A_premium": 96500, "Cat_A_quota": 1070, "Cat_A_bids": 1599, "Cat_A_ratio": 1.49, "Cat_B_premium": 116216, "Cat_B_quota": 890, "Cat_B_bids": 1226, "Cat_B_ratio": 1.38, "Cat_C_premium": 76545, "Cat_C_quota": 140, "Cat_C_bids": 257, "Cat_C_ratio": 1.84, "Cat_D_premium": 7802, "Cat_D_quota": 1125, "Cat_D_bids": 2108, "Cat_D_ratio": 1.87, "Cat_E_premium": 124501, "Cat_E_quota": 250, "Cat_E_bids": 572, "Cat_E_ratio": 2.29, "spread_B_minus_A": 19716, "total_car_quota": 1960}, {"month": "2023-06", "Cat_A_premium": 97104, "Cat_A_quota": 1167, "Cat_A_bids": 1632, "Cat_A_ratio": 1.4, "Cat_B_premium": 120851, "Cat_B_quota": 908, "Cat_B_bids": 1341, "Cat_B_ratio": 1.48, "Cat_C_premium": 82470, "Cat_C_quota": 139, "Cat_C_bids": 329, "Cat_C_ratio": 2.37, "Cat_D_premium": 10855, "Cat_D_quota": 1106, "Cat_D_bids": 1768, "Cat_D_ratio": 1.6, "Cat_E_premium": 121944, "Cat_E_quota": 269, "Cat_E_bids": 592, "Cat_E_ratio": 2.2, "spread_B_minus_A": 23747, "total_car_quota": 2075}, {"month": "2023-07", "Cat_A_premium": 96101, "Cat_A_quota": 1169, "Cat_A_bids": 1484, "Cat_A_ratio": 1.27, "Cat_B_premium": 118002, "Cat_B_quota": 933, "Cat_B_bids": 1196, "Cat_B_ratio": 1.28, "Cat_C_premium": 82112, "Cat_C_quota": 146, "Cat_C_bids": 280, "Cat_C_ratio": 1.92, "Cat_D_premium": 10296, "Cat_D_quota": 1130, "Cat_D_bids": 1686, "Cat_D_ratio": 1.49, "Cat_E_premium": 121555, "Cat_E_quota": 259, "Cat_E_bids": 460, "Cat_E_ratio": 1.78, "spread_B_minus_A": 21901, "total_car_quota": 2102}, {"month": "2023-08", "Cat_A_premium": 99750, "Cat_A_quota": 1268, "Cat_A_bids": 1857, "Cat_A_ratio": 1.46, "Cat_B_premium": 128390, "Cat_B_quota": 948, "Cat_B_bids": 1584, "Cat_B_ratio": 1.67, "Cat_C_premium": 82450, "Cat_C_quota": 236, "Cat_C_bids": 402, "Cat_C_ratio": 1.7, "Cat_D_premium": 11452, "Cat_D_quota": 1017, "Cat_D_bids": 1413, "Cat_D_ratio": 1.39, "Cat_E_premium": 128600, "Cat_E_quota": 271, "Cat_E_bids": 474, "Cat_E_ratio": 1.75, "spread_B_minus_A": 28640, "total_car_quota": 2216}, {"month": "2023-09", "Cat_A_premium": 103000, "Cat_A_quota": 1296, "Cat_A_bids": 1704, "Cat_A_ratio": 1.31, "Cat_B_premium": 137889, "Cat_B_quota": 966, "Cat_B_bids": 1458, "Cat_B_ratio": 1.51, "Cat_C_premium": 83345, "Cat_C_quota": 229, "Cat_C_bids": 335, "Cat_C_ratio": 1.46, "Cat_D_premium": 10800, "Cat_D_quota": 1075, "Cat_D_bids": 1397, "Cat_D_ratio": 1.3, "Cat_E_premium": 140820, "Cat_E_quota": 283, "Cat_E_bids": 501, "Cat_E_ratio": 1.77, "spread_B_minus_A": 34889, "total_car_quota": 2262}, {"month": "2023-10", "Cat_A_premium": 105000, "Cat_A_quota": 1582, "Cat_A_bids": 2067, "Cat_A_ratio": 1.31, "Cat_B_premium": 148002, "Cat_B_quota": 946, "Cat_B_bids": 1266, "Cat_B_ratio": 1.34, "Cat_C_premium": 85345, "Cat_C_quota": 228, "Cat_C_bids": 377, "Cat_C_ratio": 1.65, "Cat_D_premium": 11028, "Cat_D_quota": 999, "Cat_D_bids": 1293, "Cat_D_ratio": 1.29, "Cat_E_premium": 155002, "Cat_E_quota": 278, "Cat_E_bids": 489, "Cat_E_ratio": 1.76, "spread_B_minus_A": 43002, "total_car_quota": 2528}, {"month": "2023-11", "Cat_A_premium": 90345, "Cat_A_quota": 1849, "Cat_A_bids": 2456, "Cat_A_ratio": 1.33, "Cat_B_premium": 122668, "Cat_B_quota": 1284, "Cat_B_bids": 2058, "Cat_B_ratio": 1.6, "Cat_C_premium": 75945, "Cat_C_quota": 380, "Cat_C_bids": 649, "Cat_C_ratio": 1.71, "Cat_D_premium": 10445, "Cat_D_quota": 1065, "Cat_D_bids": 1332, "Cat_D_ratio": 1.25, "Cat_E_premium": 130006, "Cat_E_quota": 292, "Cat_E_bids": 550, "Cat_E_ratio": 1.88, "spread_B_minus_A": 32323, "total_car_quota": 3133}, {"month": "2023-12", "Cat_A_premium": 86510, "Cat_A_quota": 1847, "Cat_A_bids": 2399, "Cat_A_ratio": 1.3, "Cat_B_premium": 120050, "Cat_B_quota": 1281, "Cat_B_bids": 1780, "Cat_B_ratio": 1.39, "Cat_C_premium": 70212, "Cat_C_quota": 385, "Cat_C_bids": 705, "Cat_C_ratio": 1.83, "Cat_D_premium": 9430, "Cat_D_quota": 1075, "Cat_D_bids": 1377, "Cat_D_ratio": 1.28, "Cat_E_premium": 125888, "Cat_E_quota": 292, "Cat_E_bids": 515, "Cat_E_ratio": 1.76, "spread_B_minus_A": 33540, "total_car_quota": 3128}, {"month": "2024-01", "Cat_A_premium": 73300, "Cat_A_quota": 1847, "Cat_A_bids": 3064, "Cat_A_ratio": 1.66, "Cat_B_premium": 98505, "Cat_B_quota": 1290, "Cat_B_bids": 2158, "Cat_B_ratio": 1.67, "Cat_C_premium": 67800, "Cat_C_quota": 384, "Cat_C_bids": 734, "Cat_C_ratio": 1.91, "Cat_D_premium": 9212, "Cat_D_quota": 1043, "Cat_D_bids": 1281, "Cat_D_ratio": 1.23, "Cat_E_premium": 107696, "Cat_E_quota": 289, "Cat_E_bids": 530, "Cat_E_ratio": 1.83, "spread_B_minus_A": 25205, "total_car_quota": 3137}, {"month": "2024-02", "Cat_A_premium": 77900, "Cat_A_quota": 1875, "Cat_A_bids": 3840, "Cat_A_ratio": 2.05, "Cat_B_premium": 99669, "Cat_B_quota": 1304, "Cat_B_bids": 2197, "Cat_B_ratio": 1.68, "Cat_C_premium": 72501, "Cat_C_quota": 395, "Cat_C_bids": 740, "Cat_C_ratio": 1.87, "Cat_D_premium": 9100, "Cat_D_quota": 1078, "Cat_D_bids": 1406, "Cat_D_ratio": 1.3, "Cat_E_premium": 97054, "Cat_E_quota": 321, "Cat_E_bids": 576, "Cat_E_ratio": 1.79, "spread_B_minus_A": 21769, "total_car_quota": 3179}, {"month": "2024-03", "Cat_A_premium": 84244, "Cat_A_quota": 1899, "Cat_A_bids": 3788, "Cat_A_ratio": 1.99, "Cat_B_premium": 96010, "Cat_B_quota": 1364, "Cat_B_bids": 2139, "Cat_B_ratio": 1.57, "Cat_C_premium": 72856, "Cat_C_quota": 402, "Cat_C_bids": 616, "Cat_C_ratio": 1.53, "Cat_D_premium": 9544, "Cat_D_quota": 1041, "Cat_D_bids": 1275, "Cat_D_ratio": 1.22, "Cat_E_premium": 95433, "Cat_E_quota": 316, "Cat_E_bids": 538, "Cat_E_ratio": 1.7, "spread_B_minus_A": 11766, "total_car_quota": 3263}, {"month": "2024-04", "Cat_A_premium": 91505, "Cat_A_quota": 1911, "Cat_A_bids": 3312, "Cat_A_ratio": 1.73, "Cat_B_premium": 101668, "Cat_B_quota": 1343, "Cat_B_bids": 2216, "Cat_B_ratio": 1.65, "Cat_C_premium": 68002, "Cat_C_quota": 392, "Cat_C_bids": 697, "Cat_C_ratio": 1.78, "Cat_D_premium": 9995, "Cat_D_quota": 1042, "Cat_D_bids": 1235, "Cat_D_ratio": 1.19, "Cat_E_premium": 102126, "Cat_E_quota": 319, "Cat_E_bids": 602, "Cat_E_ratio": 1.89, "spread_B_minus_A": 10163, "total_car_quota": 3254}, {"month": "2024-05", "Cat_A_premium": 93152, "Cat_A_quota": 1951, "Cat_A_bids": 3076, "Cat_A_ratio": 1.58, "Cat_B_premium": 105346, "Cat_B_quota": 1324, "Cat_B_bids": 2336, "Cat_B_ratio": 1.76, "Cat_C_premium": 71001, "Cat_C_quota": 413, "Cat_C_bids": 732, "Cat_C_ratio": 1.77, "Cat_D_premium": 9407, "Cat_D_quota": 1054, "Cat_D_bids": 1234, "Cat_D_ratio": 1.17, "Cat_E_premium": 104846, "Cat_E_quota": 355, "Cat_E_bids": 612, "Cat_E_ratio": 1.72, "spread_B_minus_A": 12194, "total_car_quota": 3275}, {"month": "2024-06", "Cat_A_premium": 89544, "Cat_A_quota": 1928, "Cat_A_bids": 2870, "Cat_A_ratio": 1.49, "Cat_B_premium": 101470, "Cat_B_quota": 1359, "Cat_B_bids": 2020, "Cat_B_ratio": 1.49, "Cat_C_premium": 70244, "Cat_C_quota": 444, "Cat_C_bids": 625, "Cat_C_ratio": 1.41, "Cat_D_premium": 8996, "Cat_D_quota": 1039, "Cat_D_bids": 1248, "Cat_D_ratio": 1.2, "Cat_E_premium": 100800, "Cat_E_quota": 360, "Cat_E_bids": 620, "Cat_E_ratio": 1.72, "spread_B_minus_A": 11926, "total_car_quota": 3287}, {"month": "2024-07", "Cat_A_premium": 91450, "Cat_A_quota": 1940, "Cat_A_bids": 2771, "Cat_A_ratio": 1.43, "Cat_B_premium": 100450, "Cat_B_quota": 1332, "Cat_B_bids": 1787, "Cat_B_ratio": 1.34, "Cat_C_premium": 70301, "Cat_C_quota": 428, "Cat_C_bids": 680, "Cat_C_ratio": 1.59, "Cat_D_premium": 8994, "Cat_D_quota": 1035, "Cat_D_bids": 1162, "Cat_D_ratio": 1.12, "Cat_E_premium": 100615, "Cat_E_quota": 353, "Cat_E_bids": 609, "Cat_E_ratio": 1.73, "spread_B_minus_A": 9000, "total_car_quota": 3272}, {"month": "2024-08", "Cat_A_premium": 94094, "Cat_A_quota": 1991, "Cat_A_bids": 2884, "Cat_A_ratio": 1.45, "Cat_B_premium": 105995, "Cat_B_quota": 1349, "Cat_B_bids": 2135, "Cat_B_ratio": 1.58, "Cat_C_premium": 71750, "Cat_C_quota": 434, "Cat_C_bids": 645, "Cat_C_ratio": 1.49, "Cat_D_premium": 9456, "Cat_D_quota": 1040, "Cat_D_bids": 1213, "Cat_D_ratio": 1.17, "Cat_E_premium": 105620, "Cat_E_quota": 351, "Cat_E_bids": 672, "Cat_E_ratio": 1.91, "spread_B_minus_A": 11901, "total_car_quota": 3340}, {"month": "2024-09", "Cat_A_premium": 97507, "Cat_A_quota": 1973, "Cat_A_bids": 2685, "Cat_A_ratio": 1.36, "Cat_B_premium": 108150, "Cat_B_quota": 1328, "Cat_B_bids": 1803, "Cat_B_ratio": 1.36, "Cat_C_premium": 74000, "Cat_C_quota": 433, "Cat_C_bids": 642, "Cat_C_ratio": 1.48, "Cat_D_premium": 9850, "Cat_D_quota": 1042, "Cat_D_bids": 1258, "Cat_D_ratio": 1.21, "Cat_E_premium": 110002, "Cat_E_quota": 353, "Cat_E_bids": 771, "Cat_E_ratio": 2.18, "spread_B_minus_A": 10643, "total_car_quota": 3301}, {"month": "2024-10", "Cat_A_premium": 103350, "Cat_A_quota": 2052, "Cat_A_bids": 3103, "Cat_A_ratio": 1.51, "Cat_B_premium": 114946, "Cat_B_quota": 1341, "Cat_B_bids": 2059, "Cat_B_ratio": 1.54, "Cat_C_premium": 73974, "Cat_C_quota": 440, "Cat_C_bids": 658, "Cat_C_ratio": 1.5, "Cat_D_premium": 9795, "Cat_D_quota": 1042, "Cat_D_bids": 1230, "Cat_D_ratio": 1.18, "Cat_E_premium": 115350, "Cat_E_quota": 359, "Cat_E_bids": 673, "Cat_E_ratio": 1.87, "spread_B_minus_A": 11596, "total_car_quota": 3393}, {"month": "2024-11", "Cat_A_premium": 94889, "Cat_A_quota": 2081, "Cat_A_bids": 2658, "Cat_A_ratio": 1.28, "Cat_B_premium": 106541, "Cat_B_quota": 1374, "Cat_B_bids": 1913, "Cat_B_ratio": 1.39, "Cat_C_premium": 68670, "Cat_C_quota": 471, "Cat_C_bids": 743, "Cat_C_ratio": 1.58, "Cat_D_premium": 8879, "Cat_D_quota": 1044, "Cat_D_bids": 1235, "Cat_D_ratio": 1.18, "Cat_E_premium": 108250, "Cat_E_quota": 368, "Cat_E_bids": 619, "Cat_E_ratio": 1.68, "spread_B_minus_A": 11652, "total_car_quota": 3455}, {"month": "2024-12", "Cat_A_premium": 95000, "Cat_A_quota": 2072, "Cat_A_bids": 2981, "Cat_A_ratio": 1.44, "Cat_B_premium": 106005, "Cat_B_quota": 1365, "Cat_B_bids": 1853, "Cat_B_ratio": 1.36, "Cat_C_premium": 70090, "Cat_C_quota": 517, "Cat_C_bids": 818, "Cat_C_ratio": 1.58, "Cat_D_premium": 8130, "Cat_D_quota": 1036, "Cat_D_bids": 1211, "Cat_D_ratio": 1.17, "Cat_E_premium": 106496, "Cat_E_quota": 361, "Cat_E_bids": 656, "Cat_E_ratio": 1.82, "spread_B_minus_A": 11005, "total_car_quota": 3437}, {"month": "2025-01", "Cat_A_premium": 93650, "Cat_A_quota": 2103, "Cat_A_bids": 2865, "Cat_A_ratio": 1.36, "Cat_B_premium": 119063, "Cat_B_quota": 1363, "Cat_B_bids": 2337, "Cat_B_ratio": 1.71, "Cat_C_premium": 66684, "Cat_C_quota": 482, "Cat_C_bids": 737, "Cat_C_ratio": 1.53, "Cat_D_premium": 8361, "Cat_D_quota": 1056, "Cat_D_bids": 1246, "Cat_D_ratio": 1.18, "Cat_E_premium": 119056, "Cat_E_quota": 381, "Cat_E_bids": 741, "Cat_E_ratio": 1.94, "spread_B_minus_A": 25413, "total_car_quota": 3466}, {"month": "2025-02", "Cat_A_premium": 88925, "Cat_A_quota": 2287, "Cat_A_bids": 3736, "Cat_A_ratio": 1.63, "Cat_B_premium": 110351, "Cat_B_quota": 1492, "Cat_B_bids": 2142, "Cat_B_ratio": 1.44, "Cat_C_premium": 63848, "Cat_C_quota": 519, "Cat_C_bids": 824, "Cat_C_ratio": 1.59, "Cat_D_premium": 8540, "Cat_D_quota": 1048, "Cat_D_bids": 1363, "Cat_D_ratio": 1.3, "Cat_E_premium": 110001, "Cat_E_quota": 397, "Cat_E_bids": 736, "Cat_E_ratio": 1.85, "spread_B_minus_A": 21426, "total_car_quota": 3779}, {"month": "2025-03", "Cat_A_premium": 93616, "Cat_A_quota": 2282, "Cat_A_bids": 3985, "Cat_A_ratio": 1.75, "Cat_B_premium": 114945, "Cat_B_quota": 1512, "Cat_B_bids": 2404, "Cat_B_ratio": 1.59, "Cat_C_premium": 68545, "Cat_C_quota": 539, "Cat_C_bids": 882, "Cat_C_ratio": 1.64, "Cat_D_premium": 9356, "Cat_D_quota": 1044, "Cat_D_bids": 1250, "Cat_D_ratio": 1.2, "Cat_E_premium": 114946, "Cat_E_quota": 400, "Cat_E_bids": 785, "Cat_E_ratio": 1.96, "spread_B_minus_A": 21329, "total_car_quota": 3794}, {"month": "2025-04", "Cat_A_premium": 98612, "Cat_A_quota": 2277, "Cat_A_bids": 4283, "Cat_A_ratio": 1.88, "Cat_B_premium": 117451, "Cat_B_quota": 1504, "Cat_B_bids": 2298, "Cat_B_ratio": 1.53, "Cat_C_premium": 66892, "Cat_C_quota": 527, "Cat_C_bids": 781, "Cat_C_ratio": 1.48, "Cat_D_premium": 9599, "Cat_D_quota": 1036, "Cat_D_bids": 1263, "Cat_D_ratio": 1.22, "Cat_E_premium": 117502, "Cat_E_quota": 400, "Cat_E_bids": 796, "Cat_E_ratio": 1.99, "spread_B_minus_A": 18839, "total_car_quota": 3781}, {"month": "2025-05", "Cat_A_premium": 102755, "Cat_A_quota": 2534, "Cat_A_bids": 4155, "Cat_A_ratio": 1.64, "Cat_B_premium": 118439, "Cat_B_quota": 1595, "Cat_B_bids": 2303, "Cat_B_ratio": 1.44, "Cat_C_premium": 62890, "Cat_C_quota": 542, "Cat_C_bids": 768, "Cat_C_ratio": 1.42, "Cat_D_premium": 8708, "Cat_D_quota": 1070, "Cat_D_bids": 1331, "Cat_D_ratio": 1.24, "Cat_E_premium": 118450, "Cat_E_quota": 413, "Cat_E_bids": 771, "Cat_E_ratio": 1.87, "spread_B_minus_A": 15684, "total_car_quota": 4129}, {"month": "2025-06", "Cat_A_premium": 97562, "Cat_A_quota": 2529, "Cat_A_bids": 3338, "Cat_A_ratio": 1.32, "Cat_B_premium": 114835, "Cat_B_quota": 1579, "Cat_B_bids": 2137, "Cat_B_ratio": 1.35, "Cat_C_premium": 63500, "Cat_C_quota": 547, "Cat_C_bids": 779, "Cat_C_ratio": 1.42, "Cat_D_premium": 8800, "Cat_D_quota": 1073, "Cat_D_bids": 1236, "Cat_D_ratio": 1.15, "Cat_E_premium": 115394, "Cat_E_quota": 425, "Cat_E_bids": 762, "Cat_E_ratio": 1.79, "spread_B_minus_A": 17273, "total_car_quota": 4108}, {"month": "2025-07", "Cat_A_premium": 101102, "Cat_A_quota": 2506, "Cat_A_bids": 3792, "Cat_A_ratio": 1.51, "Cat_B_premium": 119350, "Cat_B_quota": 1565, "Cat_B_bids": 2347, "Cat_B_ratio": 1.5, "Cat_C_premium": 67644, "Cat_C_quota": 562, "Cat_C_bids": 837, "Cat_C_ratio": 1.49, "Cat_D_premium": 9450, "Cat_D_quota": 1073, "Cat_D_bids": 1251, "Cat_D_ratio": 1.17, "Cat_E_premium": 119250, "Cat_E_quota": 423, "Cat_E_bids": 815, "Cat_E_ratio": 1.93, "spread_B_minus_A": 18248, "total_car_quota": 4071}, {"month": "2025-08", "Cat_A_premium": 103266, "Cat_A_quota": 2532, "Cat_A_bids": 3677, "Cat_A_ratio": 1.45, "Cat_B_premium": 123949, "Cat_B_quota": 1581, "Cat_B_bids": 2492, "Cat_B_ratio": 1.58, "Cat_C_premium": 71096, "Cat_C_quota": 563, "Cat_C_bids": 894, "Cat_C_ratio": 1.59, "Cat_D_premium": 8999, "Cat_D_quota": 1073, "Cat_D_bids": 1287, "Cat_D_ratio": 1.2, "Cat_E_premium": 123668, "Cat_E_quota": 518, "Cat_E_bids": 1002, "Cat_E_ratio": 1.93, "spread_B_minus_A": 20683, "total_car_quota": 4113}, {"month": "2025-09", "Cat_A_premium": 113446, "Cat_A_quota": 2547, "Cat_A_bids": 4365, "Cat_A_ratio": 1.71, "Cat_B_premium": 132196, "Cat_B_quota": 1582, "Cat_B_bids": 2459, "Cat_B_ratio": 1.55, "Cat_C_premium": 72028, "Cat_C_quota": 559, "Cat_C_bids": 814, "Cat_C_ratio": 1.46, "Cat_D_premium": 9155, "Cat_D_quota": 1079, "Cat_D_bids": 1250, "Cat_D_ratio": 1.16, "Cat_E_premium": 134202, "Cat_E_quota": 512, "Cat_E_bids": 1029, "Cat_E_ratio": 2.01, "spread_B_minus_A": 18750, "total_car_quota": 4129}, {"month": "2025-10", "Cat_A_premium": 125052, "Cat_A_quota": 2538, "Cat_A_bids": 4540, "Cat_A_ratio": 1.79, "Cat_B_premium": 136444, "Cat_B_quota": 1639, "Cat_B_bids": 2179, "Cat_B_ratio": 1.33, "Cat_C_premium": 75551, "Cat_C_quota": 550, "Cat_C_bids": 851, "Cat_C_ratio": 1.55, "Cat_D_premium": 9600, "Cat_D_quota": 1066, "Cat_D_bids": 1228, "Cat_D_ratio": 1.15, "Cat_E_premium": 138004, "Cat_E_quota": 520, "Cat_E_bids": 886, "Cat_E_ratio": 1.7, "spread_B_minus_A": 11392, "total_car_quota": 4177}, {"month": "2025-11", "Cat_A_premium": 109501, "Cat_A_quota": 2591, "Cat_A_bids": 3269, "Cat_A_ratio": 1.26, "Cat_B_premium": 122446, "Cat_B_quota": 1606, "Cat_B_bids": 2467, "Cat_B_ratio": 1.54, "Cat_C_premium": 76194, "Cat_C_quota": 565, "Cat_C_bids": 840, "Cat_C_ratio": 1.49, "Cat_D_premium": 8664, "Cat_D_quota": 1076, "Cat_D_bids": 1226, "Cat_D_ratio": 1.14, "Cat_E_premium": 123006, "Cat_E_quota": 558, "Cat_E_bids": 933, "Cat_E_ratio": 1.67, "spread_B_minus_A": 12945, "total_car_quota": 4197}, {"month": "2025-12", "Cat_A_premium": 107457, "Cat_A_quota": 2563, "Cat_A_bids": 3204, "Cat_A_ratio": 1.25, "Cat_B_premium": 119501, "Cat_B_quota": 1640, "Cat_B_bids": 2064, "Cat_B_ratio": 1.26, "Cat_C_premium": 76752, "Cat_C_quota": 572, "Cat_C_bids": 777, "Cat_C_ratio": 1.36, "Cat_D_premium": 8185, "Cat_D_quota": 1070, "Cat_D_bids": 1259, "Cat_D_ratio": 1.18, "Cat_E_premium": 121000, "Cat_E_quota": 567, "Cat_E_bids": 999, "Cat_E_ratio": 1.76, "spread_B_minus_A": 12044, "total_car_quota": 4203}, {"month": "2026-01", "Cat_A_premium": 105755, "Cat_A_quota": 2586, "Cat_A_bids": 3961, "Cat_A_ratio": 1.53, "Cat_B_premium": 120367, "Cat_B_quota": 1627, "Cat_B_bids": 2335, "Cat_B_ratio": 1.44, "Cat_C_premium": 75352, "Cat_C_quota": 570, "Cat_C_bids": 828, "Cat_C_ratio": 1.45, "Cat_D_premium": 8774, "Cat_D_quota": 1082, "Cat_D_bids": 1248, "Cat_D_ratio": 1.15, "Cat_E_premium": 121446, "Cat_E_quota": 577, "Cat_E_bids": 954, "Cat_E_ratio": 1.65, "spread_B_minus_A": 14612, "total_car_quota": 4213}, {"month": "2026-02", "Cat_A_premium": 106410, "Cat_A_quota": 2554, "Cat_A_bids": 3957, "Cat_A_ratio": 1.55, "Cat_B_premium": 107946, "Cat_B_quota": 1626, "Cat_B_bids": 2319, "Cat_B_ratio": 1.43, "Cat_C_premium": 74900, "Cat_C_quota": 586, "Cat_C_bids": 922, "Cat_C_ratio": 1.57, "Cat_D_premium": 8139, "Cat_D_quota": 1098, "Cat_D_bids": 1310, "Cat_D_ratio": 1.19, "Cat_E_premium": 114445, "Cat_E_quota": 510, "Cat_E_bids": 1033, "Cat_E_ratio": 2.03, "spread_B_minus_A": 1536, "total_car_quota": 4180}, {"month": "2026-03", "Cat_A_premium": 110055, "Cat_A_quota": 2532, "Cat_A_bids": 3657, "Cat_A_ratio": 1.44, "Cat_B_premium": 114785, "Cat_B_quota": 1627, "Cat_B_bids": 2446, "Cat_B_ratio": 1.5, "Cat_C_premium": 77000, "Cat_C_quota": 580, "Cat_C_bids": 926, "Cat_C_ratio": 1.6, "Cat_D_premium": 9096, "Cat_D_quota": 1091, "Cat_D_bids": 1369, "Cat_D_ratio": 1.25, "Cat_E_premium": 116504, "Cat_E_quota": 491, "Cat_E_bids": 936, "Cat_E_ratio": 1.91, "spread_B_minus_A": 4730, "total_car_quota": 4159}, {"month": "2026-04", "Cat_A_premium": 120505, "Cat_A_quota": 2530, "Cat_A_bids": 4947, "Cat_A_ratio": 1.96, "Cat_B_premium": 121000, "Cat_B_quota": 1622, "Cat_B_bids": 2600, "Cat_B_ratio": 1.6, "Cat_C_premium": 81751, "Cat_C_quota": 585, "Cat_C_bids": 1033, "Cat_C_ratio": 1.77, "Cat_D_premium": 9645, "Cat_D_quota": 1097, "Cat_D_bids": 1341, "Cat_D_ratio": 1.22, "Cat_E_premium": 123002, "Cat_E_quota": 486, "Cat_E_bids": 969, "Cat_E_ratio": 1.99, "spread_B_minus_A": 495, "total_car_quota": 4152}, {"month": "2026-05", "Cat_A_premium": 124510, "Cat_A_quota": 2540, "Cat_A_bids": 4354, "Cat_A_ratio": 1.71, "Cat_B_premium": 127868, "Cat_B_quota": 1752, "Cat_B_bids": 2801, "Cat_B_ratio": 1.6, "Cat_C_premium": 89851, "Cat_C_quota": 585, "Cat_C_bids": 979, "Cat_C_ratio": 1.67, "Cat_D_premium": 9570, "Cat_D_quota": 1053, "Cat_D_bids": 1237, "Cat_D_ratio": 1.17, "Cat_E_premium": 128850, "Cat_E_quota": 510, "Cat_E_bids": 915, "Cat_E_ratio": 1.79, "spread_B_minus_A": 3358, "total_car_quota": 4292}, {"month": "2026-06", "Cat_A_premium": 124928, "Cat_A_quota": 2497, "Cat_A_bids": 3844, "Cat_A_ratio": 1.54, "Cat_B_premium": 125246, "Cat_B_quota": 1772, "Cat_B_bids": 2502, "Cat_B_ratio": 1.41, "Cat_C_premium": 93500, "Cat_C_quota": 584, "Cat_C_bids": 843, "Cat_C_ratio": 1.44, "Cat_D_premium": 9994, "Cat_D_quota": 1058, "Cat_D_bids": 1209, "Cat_D_ratio": 1.14, "Cat_E_premium": 129001, "Cat_E_quota": 523, "Cat_E_bids": 984, "Cat_E_ratio": 1.88, "spread_B_minus_A": 318, "total_car_quota": 4269}, {"month": "2026-07", "Cat_A_premium": 127500, "Cat_A_quota": 2489, "Cat_A_bids": 3469, "Cat_A_ratio": 1.39, "Cat_B_premium": 130390, "Cat_B_quota": 1738, "Cat_B_bids": 2865, "Cat_B_ratio": 1.65, "Cat_C_premium": 94444, "Cat_C_quota": 597, "Cat_C_bids": 872, "Cat_C_ratio": 1.46, "Cat_D_premium": 10202, "Cat_D_quota": 1092, "Cat_D_bids": 1297, "Cat_D_ratio": 1.19, "Cat_E_premium": 129886, "Cat_E_quota": 540, "Cat_E_bids": 902, "Cat_E_ratio": 1.67, "spread_B_minus_A": 2890, "total_car_quota": 4227}, {"month": "2026-08", "Cat_A_premium": 126196, "Cat_A_quota": 2423, "Cat_A_bids": 3122, "Cat_A_ratio": 1.29, "Cat_B_premium": 130456, "Cat_B_quota": 1862, "Cat_B_bids": 2632, "Cat_B_ratio": 1.41, "Cat_C_premium": 90774, "Cat_C_quota": 621, "Cat_C_bids": 911, "Cat_C_ratio": 1.47, "Cat_D_premium": 10902, "Cat_D_quota": 1033, "Cat_D_bids": 1277, "Cat_D_ratio": 1.24, "Cat_E_premium": 133000, "Cat_E_quota": 508, "Cat_E_bids": 910, "Cat_E_ratio": 1.79, "spread_B_minus_A": 4260, "total_car_quota": 4285}, {"month": "2026-09", "Cat_A_premium": 132450, "Cat_A_quota": 2388, "Cat_A_bids": 3215, "Cat_A_ratio": 1.35, "Cat_B_premium": 134000, "Cat_B_quota": 1861, "Cat_B_bids": 2468, "Cat_B_ratio": 1.33, "Cat_C_premium": 92622, "Cat_C_quota": 628, "Cat_C_bids": 1097, "Cat_C_ratio": 1.75, "Cat_D_premium": 12378, "Cat_D_quota": 1036, "Cat_D_bids": 1262, "Cat_D_ratio": 1.22, "Cat_E_premium": 137445, "Cat_E_quota": 569, "Cat_E_bids": 944, "Cat_E_ratio": 1.66, "spread_B_minus_A": 1550, "total_car_quota": 4249}, {"month": "2026-10", "Cat_A_premium": 131002, "Cat_A_quota": 2423, "Cat_A_bids": 3134, "Cat_A_ratio": 1.29, "Cat_B_premium": 131000, "Cat_B_quota": 1868, "Cat_B_bids": 2275, "Cat_B_ratio": 1.22, "Cat_C_premium": 92044, "Cat_C_quota": 618, "Cat_C_bids": 952, "Cat_C_ratio": 1.54, "Cat_D_premium": 10895, "Cat_D_quota": 1069, "Cat_D_bids": 1210, "Cat_D_ratio": 1.13, "Cat_E_premium": 136395, "Cat_E_quota": 523, "Cat_E_bids": 903, "Cat_E_ratio": 1.73, "spread_B_minus_A": -2, "total_car_quota": 4291}, {"month": "2026-11", "Cat_A_premium": 134550, "Cat_A_quota": 2382, "Cat_A_bids": 3482, "Cat_A_ratio": 1.46, "Cat_B_premium": 128967, "Cat_B_quota": 1910, "Cat_B_bids": 2227, "Cat_B_ratio": 1.17, "Cat_C_premium": 91895, "Cat_C_quota": 629, "Cat_C_bids": 955, "Cat_C_ratio": 1.52, "Cat_D_premium": 10589, "Cat_D_quota": 1015, "Cat_D_bids": 1219, "Cat_D_ratio": 1.2, "Cat_E_premium": 135999, "Cat_E_quota": 553, "Cat_E_bids": 972, "Cat_E_ratio": 1.76, "spread_B_minus_A": -5583, "total_car_quota": 4292}];
+
+    // Global Chart References
+    let chartHistorical, chartInverse, chartHeat, chartSpread, chartSpectrum;
+
+    // Helper: format currency
+    function fmt(n) {
+      return '$' + Math.round(n).toLocaleString('en-US');
+    }
+
+    // Initialize All Charts on DOM Load
+    window.addEventListener('DOMContentLoaded', () => {
+      initChartHistorical();
+      initChartInverse();
+      initChartHeat();
+      initChartSpread();
+      initChartSpectrum();
+      recalc();
+    });
+
+    // 1. Historical Premiums Chart
+    function initChartHistorical() {
+      const ctx = document.getElementById('chartHistorical').getContext('2d');
+      const labels = RAW_DATA.map(d => d.month);
+      const catA = RAW_DATA.map(d => d.Cat_A_premium);
+      const catB = RAW_DATA.map(d => d.Cat_B_premium);
+      const catE = RAW_DATA.map(d => d.Cat_E_premium);
+
+      chartHistorical = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Category A',
+              data: catA,
+              borderColor: '#38bdf8',
+              backgroundColor: 'rgba(56, 189, 248, 0.05)',
+              borderWidth: 2,
+              tension: 0.2,
+              pointRadius: 0,
+              pointHoverRadius: 5
+            },
+            {
+              label: 'Category B',
+              data: catB,
+              borderColor: '#f43f5e',
+              backgroundColor: 'rgba(244, 63, 94, 0.05)',
+              borderWidth: 2,
+              tension: 0.2,
+              pointRadius: 0,
+              pointHoverRadius: 5
+            },
+            {
+              label: 'Category E (Open)',
+              data: catE,
+              borderColor: '#c084fc',
+              borderDash: [4, 4],
+              borderWidth: 1.5,
+              tension: 0.2,
+              pointRadius: 0,
+              pointHoverRadius: 4
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#1e293b',
+              titleColor: '#f8fafc',
+              bodyColor: '#e2e8f0',
+              borderColor: '#334155',
+              borderWidth: 1,
+              callbacks: {
+                label: function(ctx) { return ctx.dataset.label + ': ' + fmt(ctx.parsed.y); }
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { color: 'rgba(255, 255, 255, 0.05)' },
+              ticks: { color: '#64748b', maxTicksLimit: 12 }
+            },
+            y: {
+              grid: { color: 'rgba(255, 255, 255, 0.05)' },
+              ticks: {
+                color: '#64748b',
+                callback: function(val) { return '$' + (val / 1000) + 'k'; }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    function filterChart1(view) {
+      document.querySelectorAll('#chart1-btns button').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+
+      let filtered;
+      if (view === 'recent') {
+        filtered = RAW_DATA.filter(d => d.month >= '2020-01');
+      } else if (view === 'cycle1') {
+        filtered = RAW_DATA.filter(d => d.month >= '2015-01' && d.month <= '2019-12');
+      } else {
+        filtered = RAW_DATA;
+      }
+
+      chartHistorical.data.labels = filtered.map(d => d.month);
+      chartHistorical.data.datasets[0].data = filtered.map(d => d.Cat_A_premium);
+      chartHistorical.data.datasets[1].data = filtered.map(d => d.Cat_B_premium);
+      chartHistorical.data.datasets[2].data = filtered.map(d => d.Cat_E_premium);
+      chartHistorical.update();
+    }
+
+    // 2. Inverse Correlation Dual Axis Chart
+    function initChartInverse() {
+      const ctx = document.getElementById('chartInverse').getContext('2d');
+      const labels = RAW_DATA.map(d => d.month);
+      const quotas = RAW_DATA.map(d => d.total_car_quota);
+      const blendedPrice = RAW_DATA.map(d => (d.Cat_A_premium + d.Cat_B_premium) / 2);
+
+      chartInverse = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              type: 'bar',
+              label: 'Car Quota (Cat A + B)',
+              data: quotas,
+              backgroundColor: 'rgba(56, 189, 248, 0.25)',
+              borderColor: 'rgba(56, 189, 248, 0.4)',
+              borderWidth: 1,
+              yAxisID: 'yQuota',
+              barPercentage: 0.9
+            },
+            {
+              type: 'line',
+              label: 'Blended Premium (Cat A & B)',
+              data: blendedPrice,
+              borderColor: '#fbbf24',
+              backgroundColor: 'transparent',
+              borderWidth: 2.5,
+              tension: 0.25,
+              pointRadius: 0,
+              yAxisID: 'yPrice'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#1e293b',
+              borderColor: '#334155',
+              borderWidth: 1,
+              callbacks: {
+                label: function(ctx) {
+                  if (ctx.datasetIndex === 0) return 'Monthly Quota: ' + ctx.parsed.y.toLocaleString() + ' certs';
+                  return 'Blended Avg: ' + fmt(ctx.parsed.y);
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { color: 'rgba(255, 255, 255, 0.05)' },
+              ticks: { color: '#64748b', maxTicksLimit: 12 }
+            },
+            yQuota: {
+              type: 'linear',
+              position: 'left',
+              grid: { color: 'rgba(255, 255, 255, 0.05)' },
+              ticks: { color: '#38bdf8' },
+              title: { display: true, text: 'Quota Volume', color: '#38bdf8' }
+            },
+            yPrice: {
+              type: 'linear',
+              position: 'right',
+              grid: { drawOnChartArea: false },
+              ticks: {
+                color: '#fbbf24',
+                callback: function(val) { return '$' + (val / 1000) + 'k'; }
+              },
+              title: { display: true, text: 'Average Premium (S$)', color: '#fbbf24' }
+            }
+          }
+        }
+      });
+    }
+
+    // 3. Bid-to-Quota Heat Index
+    function initChartHeat() {
+      const ctx = document.getElementById('chartHeat').getContext('2d');
+      const labels = RAW_DATA.map(d => d.month);
+      const ratioA = RAW_DATA.map(d => d.Cat_A_ratio);
+      const ratioB = RAW_DATA.map(d => d.Cat_B_ratio);
+
+      chartHeat = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Cat A Heat Ratio',
+              data: ratioA,
+              borderColor: '#f43f5e',
+              backgroundColor: 'rgba(244, 63, 94, 0.05)',
+              borderWidth: 2,
+              tension: 0.15,
+              pointRadius: 0
+            },
+            {
+              label: 'Cat B Heat Ratio',
+              data: ratioB,
+              borderColor: '#38bdf8',
+              backgroundColor: 'rgba(56, 189, 248, 0.05)',
+              borderWidth: 1.5,
+              tension: 0.15,
+              pointRadius: 0
+            },
+            {
+              label: 'Panic Threshold (1.5x)',
+              data: labels.map(() => 1.5),
+              borderColor: '#ef4444',
+              borderDash: [6, 6],
+              borderWidth: 1.5,
+              pointRadius: 0
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#1e293b',
+              borderColor: '#334155',
+              borderWidth: 1,
+              callbacks: {
+                label: function(ctx) { return ctx.dataset.label + ': ' + ctx.parsed.y.toFixed(2) + 'x'; }
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { color: 'rgba(255, 255, 255, 0.05)' },
+              ticks: { color: '#64748b', maxTicksLimit: 12 }
+            },
+            y: {
+              min: 0.8,
+              max: 2.8,
+              grid: { color: 'rgba(255, 255, 255, 0.05)' },
+              ticks: {
+                color: '#64748b',
+                callback: function(v) { return v.toFixed(1) + 'x'; }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // 4. Category Spread (Cat B - Cat A)
+    function initChartSpread() {
+      const ctx = document.getElementById('chartSpread').getContext('2d');
+      const labels = RAW_DATA.map(d => d.month);
+      const spread = RAW_DATA.map(d => d.spread_B_minus_A);
+
+      chartSpread = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Cat B - Cat A Spread',
+              data: spread,
+              borderColor: '#fbbf24',
+              backgroundColor: 'rgba(251, 191, 36, 0.15)',
+              fill: true,
+              borderWidth: 2,
+              tension: 0.2,
+              pointRadius: 0
+            },
+            {
+              label: 'Parity (0)',
+              data: labels.map(() => 0),
+              borderColor: '#475569',
+              borderWidth: 1.5,
+              borderDash: [3, 3],
+              pointRadius: 0
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#1e293b',
+              borderColor: '#334155',
+              borderWidth: 1,
+              callbacks: {
+                label: function(ctx) { return 'Spread: ' + fmt(ctx.parsed.y); }
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { color: 'rgba(255, 255, 255, 0.05)' },
+              ticks: { color: '#64748b', maxTicksLimit: 12 }
+            },
+            y: {
+              grid: { color: 'rgba(255, 255, 255, 0.05)' },
+              ticks: {
+                color: '#64748b',
+                callback: function(val) { return (val >= 0 ? '+' : '') + '$' + (val / 1000) + 'k'; }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // 5. Multi-Class Annual Spectrum
+    function initChartSpectrum() {
+      const ctx = document.getElementById('chartSpectrum').getContext('2d');
+      const years = Array.from(new Set(RAW_DATA.map(d => d.month.split('-')[0]))).sort();
+      const annualData = { A: [], B: [], C: [], D: [], E: [] };
+
+      years.forEach(y => {
+        const subset = RAW_DATA.filter(d => d.month.startsWith(y));
+        ['A', 'B', 'C', 'D', 'E'].forEach(cat => {
+          const avg = subset.reduce((acc, d) => acc + d['Cat_' + cat + '_premium'], 0) / subset.length;
+          annualData[cat].push(Math.round(avg));
+        });
+      });
+
+      chartSpectrum = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: years,
+          datasets: [
+            { label: 'Cat A', data: annualData.A, backgroundColor: '#38bdf8' },
+            { label: 'Cat B', data: annualData.B, backgroundColor: '#f43f5e' },
+            { label: 'Cat C', data: annualData.C, backgroundColor: '#fbbf24' },
+            { label: 'Cat D', data: annualData.D, backgroundColor: '#34d399' },
+            { label: 'Cat E', data: annualData.E, backgroundColor: '#c084fc' }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#1e293b',
+              borderColor: '#334155',
+              borderWidth: 1,
+              callbacks: {
+                label: function(ctx) { return ctx.dataset.label + ': ' + fmt(ctx.parsed.y); }
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { color: 'rgba(255, 255, 255, 0.05)' },
+              ticks: { color: '#64748b' }
+            },
+            y: {
+              grid: { color: 'rgba(255, 255, 255, 0.05)' },
+              ticks: {
+                color: '#64748b',
+                callback: function(val) { return '$' + (val / 1000) + 'k'; }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // Interactive Purchasing Power Calculator Logic
+    function setCOE(val, btn) {
+      document.getElementById('inp-coe').value = val;
+      document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      recalc();
+    }
+
+    function recalc() {
+      const income = parseFloat(document.getElementById('inp-income').value);
+      const omv = parseFloat(document.getElementById('inp-omv').value);
+      const coe = parseFloat(document.getElementById('inp-coe').value);
+      const tenure = parseInt(document.getElementById('inp-tenure').value);
+      const rate = parseFloat(document.getElementById('inp-rate').value) / 100;
+
+      // Update Labels
+      document.getElementById('disp-income').innerText = fmt(income);
+      document.getElementById('disp-omv').innerText = fmt(omv);
+      document.getElementById('disp-coe').innerText = fmt(coe);
+      document.getElementById('disp-tenure').innerText = tenure + (tenure > 1 ? ' Years' : ' Year');
+      document.getElementById('disp-rate').innerText = (rate * 100).toFixed(2) + '%';
+
+      // Tiered ARF Calculation (Singapore Customs)
+      let arf = 0;
+      if (omv <= 20000) {
+        arf = omv * 1.0;
+      } else if (omv <= 40000) {
+        arf = (20000 * 1.0) + ((omv - 20000) * 1.4);
+      } else if (omv <= 60000) {
+        arf = (20000 * 1.0) + (20000 * 1.4) + ((omv - 40000) * 1.9);
+      } else if (omv <= 80000) {
+        arf = (20000 * 1.0) + (20000 * 1.4) + (20000 * 1.9) + ((omv - 60000) * 2.5);
+      } else {
+        arf = (20000 * 1.0) + (20000 * 1.4) + (20000 * 1.9) + (20000 * 2.5) + ((omv - 80000) * 3.2);
+      }
+
+      // Registration fee ($350) + Excise Duty (20% of OMV) + GST (9% of [OMV + Excise])
+      const excise = omv * 0.20;
+      const gst = (omv + excise) * 0.09;
+      const regFee = 350;
+      const dealerMarginEst = Math.max(15000, omv * 0.25); // Estimated dealer margin and logistics
+
+      const totalCarPrice = omv + arf + coe + excise + gst + regFee + dealerMarginEst;
+
+      // MAS Loan Restrictions:
+      // OMV <= 20k -> Max Loan 70% (Downpayment 30%)
+      // OMV > 20k  -> Max Loan 60% (Downpayment 40%)
+      const downPct = omv <= 20000 ? 0.30 : 0.40;
+      const downpayment = totalCarPrice * downPct;
+      const loanAmount = totalCarPrice - downpayment;
+
+      // Standard Flat Rate Car Loan Interest: Total Interest = Principal * Rate * Tenure
+      const totalInterest = loanAmount * rate * tenure;
+      const totalRepay = loanAmount + totalInterest;
+      const monthlyInstallment = totalRepay / (tenure * 12);
+
+      // Income Burden
+      const burdenRatio = (monthlyInstallment / income) * 100;
+
+      // Months of median income dedicated just to the COE paper
+      const monthsOfIncomeForCOE = (coe / 11500).toFixed(1);
+
+      // Render Outputs
+      document.getElementById('res-total').innerText = fmt(totalCarPrice);
+      document.getElementById('res-breakdown').innerText = 
+        'OMV: ' + fmt(omv) + ' · ARF: ' + fmt(arf) + ' · COE: ' + fmt(coe) + ' · Tax/Margin: ' + fmt(excise + gst + dealerMarginEst);
+      document.getElementById('res-downpayment').innerText = fmt(downpayment);
+      document.getElementById('res-down-pct').innerText = Math.round(downPct * 100) + '% minimum upfront cash per MAS regulations';
+      document.getElementById('res-installment').innerText = fmt(monthlyInstallment) + ' / mo';
+      document.getElementById('res-months-coe').innerText = monthsOfIncomeForCOE + ' Months';
+
+      const indicator = document.getElementById('burden-indicator');
+      if (burdenRatio <= 20) {
+        indicator.innerHTML = '<span class="burden-badge burden-safe">✓ Manageable: ' + burdenRatio.toFixed(1) + '% of income</span>';
+      } else if (burdenRatio <= 35) {
+        indicator.innerHTML = '<span class="burden-badge burden-safe" style="color: #fbbf24; border-color: rgba(251, 191, 36, 0.4); background: rgba(251, 191, 36, 0.15);">⚠️ Moderate Burden: ' + burdenRatio.toFixed(1) + '% of income</span>';
+      } else {
+        indicator.innerHTML = '<span class="burden-badge burden-danger">🚨 Heavy Financial Stress: ' + burdenRatio.toFixed(1) + '% of income (Exceeds recommended 25% transport ratio)</span>';
+      }
+    }
+  </script>
 </body>
 </html>
